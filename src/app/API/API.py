@@ -87,7 +87,7 @@ def node_fail(node_id):
 
 
 @app.route('/register-customer', methods=['POST'])
-def register_customer() -> tuple[Response, int, dict[str, str]]:
+def register_customer() -> tuple[Response, int]:
     dict_customer: dict = request.json
 
     try:
@@ -101,15 +101,12 @@ def register_customer() -> tuple[Response, int, dict[str, str]]:
             pass
 
         if event.can_be_executed:
-            return jsonify({'descript': f'Cliente {dict_customer['user_name']} criado com sucesso'}), 200, {
-                'Content-Type': 'application/json; '
-                                'charset=utf-8'}
+            return jsonify({'descript': f'Cliente {dict_customer['user_name']} criado com sucesso'}), 200
         else:
-            return jsonify({'descript': event.mgs_executed}), 400, {'Content-Type': 'application/json; charset=utf-8'}
+            return jsonify({'descript': event.mgs_executed}), 400
 
     except (BankException, UserException) as e:
-        return jsonify({'descript': e.__str__()}), 400, {'Content-Type': 'application/json; '
-                                                                         'charset=utf-8'}
+        return jsonify({'descript': e.__str__()}), 400
 
 
 @app.route('/login', methods=['GET'])
