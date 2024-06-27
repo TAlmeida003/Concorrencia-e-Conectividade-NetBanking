@@ -2,6 +2,7 @@ import random
 import re
 import time
 
+from src.app.Exception.BackException import BankException
 from src.app.Exception.UserException import UserException
 from src.app.Node import Event
 
@@ -45,6 +46,20 @@ def get_index_event(event_id: str, FIFO_event: list[Event]) -> int:
     return -1
 
 
+def sort_random_pix(list_pix: list[str]) -> str:
+    while True:
+        random_pix = random.randint(1000000000, 9999999999)
+        if str(random_pix) not in list_pix:
+            return str(random_pix)
+
+
+def get_account(list_account: list[int]) -> int:
+    while True:
+        random_account = random.randint(100000, 999999)
+        if random_account not in list_account:
+            return random_account
+
+
 def len_nodes_online(dict_peers_online: dict[str:bool]) -> int:
     count: int = 0
     for node in LIST_NODES:
@@ -75,3 +90,18 @@ def is_data_register_user_valid(user_name: str, name: str, num_cadastro: str, us
         raise UserException('Nome inválido')
     elif len(user_name) < 3:
         raise UserException('Nome de usuário inválido')
+
+
+def generate_pix_key(user_name: str, num_account: int, pix_type: str, num_register: str, list_pix: list[str]) -> str:
+    if pix_type == 'CPF' or pix_type == 'CNPJ':
+        pix_key = num_register
+    elif pix_type == 'USER_NAME':
+        pix_key = user_name
+    elif pix_type == 'NUM_CONTA':
+        pix_key = str(num_account)
+    elif pix_type == 'RANDOM':
+        pix_key = sort_random_pix(list_pix)
+    else:
+        raise BankException('Tipo de chave pix inválido')
+
+    return pix_key
