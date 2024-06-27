@@ -16,14 +16,14 @@ class Node:
         self.id: int = node_id
 
         self.vector_clock: VectorClock = VectorClock(len(list_nodes), node_id)
-        self.bank: Bank = Bank()
+        self.bank: Bank = Bank(node_id, list_nodes)
 
         self.peers: list[str] = list_nodes
         self.FIFO_evento: list[Event] = []
 
-        self.dict_ack: dict[str: int] = {}
-        self.dict_one_queue: dict[str: int] = {}
-        self.dict_peers_online: dict[str: bool] = {}
+        self.dict_ack: dict[str, int] = {}
+        self.dict_one_queue: dict[str, int] = {}
+        self.dict_peers_online: dict[str, bool] = {}
 
         self.msg_lock: Lock = Lock()
         self.ack_lock: Lock = Lock()
@@ -97,57 +97,58 @@ class Node:
 
     def send_total_one_queue(self, event: Event):
         self.total_one_queue(event.id)
-        while event.loop_wait:  # retirar
+        while event.loop_wait:  # Espera a resposta de todos os peers
             time.sleep(0.1)
 
     def total_one_queue(self, event_id: str) -> None:
         dict_mgs: dict[str, str] = self.check_event(event_id, "ONE_QUEUE")
         for node in range(len(self.peers)):
             if node != self.id and self.dict_peers_online[self.peers[node]]:
-                Thread(target=request.post_init_check_queue, args=(event_id, node, self.peers, self.dict_peers_online)).start()
+                Thread(target=request.post_init_check_queue, args=(event_id, node, self.peers, self.dict_peers_online, dict_mgs)).start()
         self.FIFO_evento[0].send = True
 
-    def check_event(self, event_id: str, mgs: str) -> dict[str, str]:
+    def check_event(self, event_id: str, mgs: str) -> dict[str, str | bool]:
         index: int = utils.get_index_event(event_id, self.FIFO_evento)
-        dict_mgs = self.bank.test_exe_operation(self.FIFO_evento[index].msg, self.FIFO_evento[index].type_msg)
+        dict_mgs: dict[str: bool | str] = self.bank.test_exe_operation(self.FIFO_evento[index].msg, self.FIFO_evento[index].type_msg)
         if not dict_mgs['code']:
             self.FIFO_evento[index].can_be_executed = False
-            self.FIFO_evento[index].mgs_executed = dict_mgs['msg']
+            self.FIFO_evento[index].mgs_executed = dict_mgs['descript']
         dict_mgs['msg'] = mgs
         return dict_mgs
 
     def exe_one_queue(self) -> None:
         while True:
             if self.FIFO_evento and self.FIFO_evento[0].one_queue and self.FIFO_evento[0].send:
-                event = self.FIFO_evento[0]
                 with self.msg_lock:
+                    event = self.FIFO_evento[0]
                     heapq.heappop(self.FIFO_evento)
                     self.dict_ack.pop(event.id)
                     print(f"DELIVER: {event.msg} - {event.type_msg}")
                 if event.can_be_executed:
                     self.bank.exe_operation(event.msg, event.type_msg)
                 event.exe = True
-
             time.sleep(0.1)
 
-    def send_one_queue(self, event_id: str) -> None:
+    def send_one_queue(self, event_id: str, dict_mgs_receive: dict[str, str | bool]) -> None:
         with self.msg_lock:
-            # Definir a mensagem
-            mgs: str = self.get_mgs_one_queue(event_id)
-            dict_msg: dict[str, str] = self.check_event(event_id, mgs)
             index: int = utils.get_index_event(event_id, self.FIFO_evento)
-            self.FIFO_evento[index].add_num_one_queue(utils.len_nodes_online(self.dict_peers_online), mgs)
+            if not dict_mgs_receive['code']:
+                self.FIFO_evento[index].can_be_executed = False
+                self.FIFO_evento[index].mgs_executed = dict_mgs_receive['descript']
+
+            dict_msg: dict[str: str | bool] = self.check_event(event_id, self.get_mgs_one_queue(event_id))
+            self.FIFO_evento[index].add_num_one_queue(utils.len_nodes_online(self.dict_peers_online), dict_msg['msg'])
 
             event = self.FIFO_evento[index]
-            self.controller_num_queue(index, event_id, mgs)
-        self.send_mgs_one_queue(event, mgs)
+            self.controller_num_queue(index, event_id, dict_msg['msg'])
+        self.send_mgs_one_queue(event, dict_msg)
 
-    def send_mgs_one_queue(self, event: Event, mgs: str) -> None:
+    def send_mgs_one_queue(self, event: Event, dict_msg: dict[str: str | bool]) -> None:
         event.send = False
 
         for node in range(len(self.peers)):
             if node != self.id and self.dict_peers_online[self.peers[node]]:
-                Thread(target=request.post_receiver_one_queue, args=(event.id, mgs, node, self.peers, self.dict_peers_online)).start()
+                Thread(target=request.post_receiver_one_queue, args=(event.id, dict_msg, node, self.peers, self.dict_peers_online)).start()
 
         event.send = True
 
@@ -173,10 +174,13 @@ class Node:
             self.FIFO_evento[index].mgs_executed = ""
             self.FIFO_evento[index].num_one_queue = 0
 
-    def receiver_one_queue(self, event_id: str, mgs: str) -> None:
+    def receiver_one_queue(self, event_id: str, dict_msg: dict[str: str | bool]) -> None:
         with self.msg_lock:
             index: int = utils.get_index_event(event_id, self.FIFO_evento)
-            self.controller_num_queue(index, event_id, mgs)
+            if not dict_msg['code']:
+                self.FIFO_evento[index].can_be_executed = False
+                self.FIFO_evento[index].mgs_executed = dict_msg['descript']
+            self.controller_num_queue(index, event_id, dict_msg['msg'])
 
     def is_online(self) -> None:
         while True:
