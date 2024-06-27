@@ -1,5 +1,6 @@
 import asyncio
 import time
+from typing import Any, Dict, List
 
 import aiohttp
 import requests
@@ -7,39 +8,55 @@ from src.app.Node import Event
 from src.app.utils.utils import LIST_NODES, delay_time
 
 HOST = '127.0.0.1'
-TIMEOUT = 5
+TIMEOUT = None
+TIMEOUT_TESTE = 5
 
 
 def post_receiver_message(event: Event, node: int, peers: list[str], dict_peers_online: dict[str:bool]) -> None:
     try:
         requests.post(f'http://{HOST}:{peers[node]}/receiver_message/', json=event.__dict__, timeout=TIMEOUT)
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as e:
+        print("Error1: ", e)
         dict_peers_online[peers[node]] = False
 
 
 def post_receiver_ack(event_id: str, node: int, peers: list[str], dict_peers_online: dict[str:bool]) -> None:
     try:
         requests.post(f'http://{HOST}:{peers[node]}/receiver_ack/{event_id}', timeout=TIMEOUT)
-    except requests.exceptions.RequestException:
+    except requests.exceptions.RequestException as e:
+        print("Error2: ", e)
         dict_peers_online[peers[node]] = False
 
 
-def post_init_check_queue(event_id: str, node: int, peers: list[str], dict_peers_online: dict[str:bool]) -> None:
+def post_init_check_queue(event_id: str, node: int, peers: list[str], dict_peers_online: dict[str:bool],
+                          dict_mgs: dict[str: str | bool]) -> None:
     try:
-        requests.post(f'http://{HOST}:{peers[node]}/init_check_queue/{event_id}', timeout=TIMEOUT)
-    except requests.exceptions.RequestException:
+        requests.post(f'http://{HOST}:{peers[node]}/init_check_queue/{event_id}', timeout=TIMEOUT, json=dict_mgs)
+    except requests.exceptions.RequestException as e:
+        print("Error3: ", e)
         dict_peers_online[peers[node]] = False
 
 
-def post_receiver_one_queue(event_id: str, mgs: str, node: int, peers: list[str], dict_peers_online: dict[str:bool]) -> None:
+def post_receiver_one_queue(event_id: str, mgs: dict[str: str | bool], node: int, peers: list[str],
+                            dict_peers_online: dict[str:bool]) -> None:
     try:
-        requests.post(f'http://{HOST}:{peers[node]}/receiver_one_queue/{event_id}/{mgs}', timeout=TIMEOUT)
-    except requests.exceptions.RequestException:
+        requests.post(f'http://{HOST}:{peers[node]}/receiver_one_queue/{event_id}', timeout=TIMEOUT, json=mgs)
+    except requests.exceptions.RequestException as e:
+        print("Error4: ", e)
         dict_peers_online[peers[node]] = False
+
+
+def get_accounts_user(user_name: str, node: int, peers: list[str]) -> dict[int, list[list[int | float]]]:
+    try:
+        response = requests.get(f'http://{HOST}:{peers[node]}/accounts_user/{user_name}', timeout=TIMEOUT)
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print("Error5: ", e)
+        return {-1: []}
 
 
 async def request_get_check(url, id_node: str, dict_peers_online: dict[str:bool]) -> None:
-    timeout_setting = aiohttp.ClientTimeout(total=TIMEOUT)
+    timeout_setting = aiohttp.ClientTimeout(total=TIMEOUT_TESTE)
 
     async with aiohttp.ClientSession(timeout=timeout_setting) as session:
         try:
