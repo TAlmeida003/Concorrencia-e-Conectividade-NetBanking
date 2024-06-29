@@ -92,16 +92,20 @@ def is_data_register_user_valid(user_name: str, name: str, num_cadastro: str, us
         raise UserException('Nome de usuário inválido')
 
 
-def generate_pix_key(user_name: str, num_account: int, pix_type: str, num_register: str, list_pix: list[str]) -> str:
+def generate_pix_key(user_name: str, num_account: int, pix_type: str, num_register: str,
+                     list_pix: list[str], id_bank: int) -> str:
     if pix_type == 'CPF' or pix_type == 'CNPJ':
-        pix_key = num_register
+        pix_key = f"{id_bank}:{num_register}"
     elif pix_type == 'USER_NAME':
-        pix_key = user_name
+        pix_key = f"{id_bank}:{user_name}"
     elif pix_type == 'NUM_CONTA':
-        pix_key = str(num_account)
+        pix_key = f"{id_bank}:{num_account}"
     elif pix_type == 'RANDOM':
-        pix_key = sort_random_pix(list_pix)
+        pix_key = f"{id_bank}:{sort_random_pix(list_pix)}"
     else:
         raise BankException('Tipo de chave pix inválido')
+
+    if pix_key in list_pix:
+        raise BankException('Chave pix já cadastrada')
 
     return pix_key
