@@ -1,13 +1,12 @@
 import asyncio
 import time
-from typing import Any, Dict, List
 
 import aiohttp
 import requests
 from src.app.Node import Event
 from src.app.utils.utils import LIST_NODES, delay_time
 
-HOST = '127.0.0.1'
+HOST = "192.168.25.109"
 TIMEOUT = None
 TIMEOUT_TESTE = 5
 
@@ -53,6 +52,22 @@ def get_accounts_user(user_name: str, node: int, peers: list[str]) -> dict[int, 
     except requests.exceptions.RequestException as e:
         print("Error5: ", e)
         return {-1: []}
+
+
+def post_receiver_pix_all(pix: str, node: int, peers: list[str], dict_peers_online: dict[str:bool]) -> None:
+    try:
+        requests.post(f'http://{HOST}:{peers[node]}/receiver_pix_all/{pix}', timeout=TIMEOUT)
+    except requests.exceptions.RequestException as e:
+        print("Error6: ", e)
+        dict_peers_online[peers[node]] = False
+
+
+def post_receiver_pix(dict_data: dict, node: int, peers: list[str], dict_peers_online: dict[str:bool]) -> None:
+    try:
+        requests.post(f'http://{HOST}:{peers[node]}/receiver_pix', timeout=TIMEOUT, json=dict_data)
+    except requests.exceptions.RequestException as e:
+        print("Error7: ", e)
+        dict_peers_online[peers[node]] = False
 
 
 async def request_get_check(url, id_node: str, dict_peers_online: dict[str:bool]) -> None:
