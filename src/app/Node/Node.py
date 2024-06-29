@@ -16,7 +16,6 @@ class Node:
         self.id: int = node_id
 
         self.vector_clock: VectorClock = VectorClock(len(list_nodes), node_id)
-        self.bank: Bank = Bank(node_id, list_nodes)
 
         self.peers: list[str] = list_nodes
         self.FIFO_evento: list[Event] = []
@@ -24,6 +23,8 @@ class Node:
         self.dict_ack: dict[str, int] = {}
         self.dict_one_queue: dict[str, int] = {}
         self.dict_peers_online: dict[str, bool] = {}
+
+        self.bank: Bank = Bank(self.id, self.peers, self.dict_peers_online)
 
         self.msg_lock: Lock = Lock()
         self.ack_lock: Lock = Lock()
@@ -102,9 +103,16 @@ class Node:
 
     def total_one_queue(self, event_id: str) -> None:
         dict_mgs: dict[str, str] = self.check_event(event_id, "ONE_QUEUE")
+        list_thread = []
         for node in range(len(self.peers)):
             if node != self.id and self.dict_peers_online[self.peers[node]]:
-                Thread(target=request.post_init_check_queue, args=(event_id, node, self.peers, self.dict_peers_online, dict_mgs)).start()
+                thread = Thread(target=request.post_init_check_queue, args=(event_id, node, self.peers, self.dict_peers_online, dict_mgs))
+                thread.start()
+                list_thread.append(thread)
+
+        for thread in list_thread:
+            thread.join()
+
         self.FIFO_evento[0].send = True
 
     def check_event(self, event_id: str, mgs: str) -> dict[str, str | bool]:
@@ -119,14 +127,14 @@ class Node:
     def exe_one_queue(self) -> None:
         while True:
             if self.FIFO_evento and self.FIFO_evento[0].one_queue and self.FIFO_evento[0].send:
-                with self.msg_lock:
-                    event = self.FIFO_evento[0]
-                    heapq.heappop(self.FIFO_evento)
-                    self.dict_ack.pop(event.id)
-                    print(f"DELIVER: {event.msg} - {event.type_msg}")
+                event = self.FIFO_evento[0]
                 if event.can_be_executed:
                     self.bank.exe_operation(event.msg, event.type_msg)
-                event.exe = True
+                with self.msg_lock:         # Se de ruim colocar no lugar
+                    heapq.heappop(self.FIFO_evento)
+                    self.dict_ack.pop(event.id)
+                    print(f"DELIVER: {event.msg}")
+                    event.exe = True
             time.sleep(0.1)
 
     def send_one_queue(self, event_id: str, dict_mgs_receive: dict[str, str | bool]) -> None:
@@ -145,10 +153,15 @@ class Node:
 
     def send_mgs_one_queue(self, event: Event, dict_msg: dict[str: str | bool]) -> None:
         event.send = False
-
+        list_thread = []
         for node in range(len(self.peers)):
             if node != self.id and self.dict_peers_online[self.peers[node]]:
-                Thread(target=request.post_receiver_one_queue, args=(event.id, dict_msg, node, self.peers, self.dict_peers_online)).start()
+                id_t = Thread(target=request.post_receiver_one_queue, args=(event.id, dict_msg, node, self.peers, self.dict_peers_online))
+                id_t.start()
+                list_thread.append(id_t)
+
+        for id_t in list_thread:
+            id_t.join()
 
         event.send = True
 
