@@ -1,4 +1,4 @@
-import asyncio
+
 import heapq
 import time
 import socket
@@ -82,7 +82,7 @@ class Node:
         while True:
             if self.FIFO_evento and self.FIFO_evento[0].sender == self.id and not self.FIFO_evento[0].one_queue:
                 event = self.FIFO_evento[0]
-                if event.id in self.dict_ack and self.dict_ack[event.id] == utils.len_nodes_online(self.dict_peers_online) - 1:
+                if event.id in self.dict_ack and self.dict_ack[event.id] >= utils.len_nodes_online(self.dict_peers_online) - 1:
                     with self.msg_lock:
                         self.FIFO_evento[0].fail = False
                         self.FIFO_evento[0].can_be_executed = True
@@ -201,16 +201,41 @@ class Node:
                 time_init = time.time()
                 socket.create_connection(("8.8.8.8", 53), timeout=5)
                 if not self.dict_peers_online[self.peers[self.id]]:
+                    print("O Banco", self.peers[self.id], "retorno")
                     self.dict_peers_online[self.peers[self.id]] = True
-                    self.FIFO_evento.clear()
-                    self.dict_ack.clear()
                     Thread(target=self.check_nodes_online).start()
+                    self.create_threads_nodes_online()
                 utils.delay_time(time_init)
             except OSError:
-                self.FIFO_evento.clear()
-                self.dict_ack.clear()
+                if self.dict_peers_online[self.peers[self.id]]:
+                    print("Banco caiu: ", self.peers[self.id])
                 utils.fail_dict_peers_online(self.dict_peers_online)
 
     def check_nodes_online(self):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_serve:
+            print("Servidor criado", self.dict_peers_online)
+            socket_serve.bind((request.HOST, int(self.peers[self.id]) - 1000))
+            socket_serve.listen()
+            while self.dict_peers_online[self.peers[self.id]]:
+                socket_serve.accept()
+
+    def create_threads_nodes_online(self):
+        for node in range(len(self.peers)):
+            if node != self.id:
+                Thread(target=self.check_nodes_connect, args=(int(self.peers[node]),)).start()
+
+    def check_nodes_connect(self, node):
         while self.dict_peers_online[self.peers[self.id]]:
-            asyncio.run(request.main_check(self.id, self.dict_peers_online))
+            try:
+                time_init = time.time()
+                tcp_aux: socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                tcp_aux.settimeout(5)
+                tcp_aux.connect((request.HOST, int(node) - 1000))
+                if not self.dict_peers_online[str(node)]:
+                    self.dict_peers_online[str(node)] = True
+                tcp_aux.close()
+                utils.delay_time(time_init)
+            except (OSError, socket.timeout, socket.error):
+                if self.dict_peers_online[str(node)]:
+                    print("Banco caiu: ", node)
+                self.dict_peers_online[str(node)] = False
