@@ -43,7 +43,7 @@ O sistema será implementado por meio de um consórcio bancário, permitindo a c
         <li><a href="#VisaoGeral"> Visão Geral do Sistema </a></li>
         <li><a href="#Software"> Softwares Utilizadas </a></li>
         <li><a href="#Funcionalidades"> Funcionalidades do sistema</a></li>
-        <li><a href="#Ordenacao"> Ordenação Total de Multicast </a></li>
+        <li><a href="#Ordenacao"> Algoritmo de Controle de Concorrência em Sistemas Distribuídos</a></li>
         <li><a href="#API"> API REST </a></li>
         <li><a href="#Organizacao"> Organização do Código Fonte </a></li>
         <li><a href="#Logica"> Lógica de Funcionamento do Sistema </a></li>
@@ -60,8 +60,9 @@ O sistema será implementado por meio de um consórcio bancário, permitindo a c
 <div id="VisaoGeral">
 <h2> Visão Geral do Sistema </h2>
 
-O projeto desenvolvido é um sistema bancário distribuído. Nesse sentido, os bancos podem se comunicar internamente e com toda a rede por meio de um sistema ponto a ponto entre cada nó (banco). Para garantir que os nós trabalhem em **consenso**, evitando a perda e a sobreposição de dados, o que pode causar a duplicidade de dinheiro, o sistema utiliza o algoritmo de **Ordenação Total de *Multicast***. Esse algoritmo será explicado em detalhes nos próximos tópicos. A seguir, é apresentado um diagrama geral do sistema, ilustrando como os bancos se comunicam:
+O projeto desenvolvido é um sistema bancário distribuído, onde os bancos se comunicam internamente e com toda a rede por meio de um sistema ponto a ponto entre cada nó (banco). Para garantir que todos os nós operem em consenso e evitem a perda ou sobreposição de dados, o que poderia resultar em duplicidade de transações, o sistema utiliza o **algoritmo de Ordenação Total de *Multicast***. Este algoritmo será detalhado nos próximos tópicos.
 
+Os usuários têm a flexibilidade de se conectar a qualquer um dos bancos para acessar as funcionalidades disponíveis no sistema, o que torna o sistema tolerante a falhas caso um banco específico esteja fora de operação. Abaixo, apresentamos um diagrama geral do sistema, ilustrando como os bancos se comunicam:
 </div>
 </div>
 
@@ -200,6 +201,196 @@ Este algoritmo pode introduzir latência devido ao número de mensagens necessá
 <div id="API">
 <h2> API REST </h2>
 
+A comunicação entre a aplicação cliente e o serviço bancário, assim como entre os bancos, é realizada através de uma API
+REST utilizando o protocolo HTTP. A API foi desenvolvida com base no *framework* **Flask**, conhecido por facilitar a criação
+de *endpoints* RESTful e o gerenciamento de rotas HTTP. A seguir, são destacados os principais *endpoints* disponíveis na 
+API, divididos entre o uso pelos bancos e pelos clientes:
+
+<h3>URL Principal</h3>
+
+A URL principal da API é: http://localhost:3050
+
+> **Nota Importante:** As rotas estão configuradas para serem acessadas localmente como exemplo. Os IPs e portas 
+> mencionados são fictícios e devem ser ajustados conforme a configuração específica do ambiente de implementação.
+
+<h3>Códigos de Status HTTP</h3>
+
+- **200:** Indica que a requisição foi executada com sucesso.
+- **400:** Alerta sobre falhas ou erros na execução do pedido.
+- **404:** Indica que o dispositivo ou endpoint solicitado não foi encontrado.
+- **500:** Significa que ocorreu um erro interno no servidor.
+
+<h3>Endpoints para Ordenação Total</h3>
+
+Endpoints para a ordenação total de mensagens entre os bancos:
+
+<h3>Receber Mensagem:</h3>
+
+- **Descrição:** Recebe uma mensagem de um banco específico, adicionando-a ao buffer de mensagens.
+
+- **Método:** POST
+
+- **Rota:** `/receive-message`
+
+- **Resposta:** Retorna o código de status HTTP **200** se a mensagem foi recebida com sucesso.
+
+- **Requisitos:** O corpo da requisição deve conter as informações da mensagem a ser recebida.
+
+- **Exemplo de Corpo da Requisição:**
+```json
+{
+    "sender": 0,  
+    "timestamp": [5, 9, 1],
+    "type_msg": "REGISTER",
+    "id": "EV192.168.0.1-1584",
+    "msg": {"mensagem" : "mensagem"}
+}
+```
+
+>**Observação:** O campo `sender` indica o número do banco que enviou a mensagem, `timestamp` é o vetor de relógio vetorial associado à mensagem, `type_msg` é o tipo da mensagem, `id` é o identificador único da mensagem e `msg` é o conteúdo da mensagem.
+
+<h3>Receber ACK:</h3>
+
+- **Descrição:** Recebe um ACK de um banco específico, confirmando a recepção da mensagem.
+
+- **Método:** POST
+
+- **Rota:** `/receiver_ack/<string:event_id>`
+
+- **Requisitos:** O parâmetro `event_id` deve conter o identificador único da mensagem que está sendo confirmada.
+
+- **Resposta:** Retorna o código de status HTTP **200** se o ACK foi recebido com sucesso.
+
+<h3>Iniciar Verificação de se é o Primeiro da Fila:</h3>
+
+- **Descrição:** Inicia a verificação de se o banco é o primeiro da fila para processar a mensagem.
+
+- **Método:** POST
+
+- **Rota:** `/init_check_queue/<string:event_id>`
+
+- **Resposta:** Retorna o código de status HTTP **200** se a verificação foi iniciada com sucesso.
+
+- **Requisitos:** O parâmetro `event_id` deve conter o identificador único da mensagem que está sendo confirmada e o corpo da mensagem  a ser recebida.
+
+- **Exemplo de Corpo da Requisição:**
+```json
+{
+    "code": false,
+    "descript": "Falha na operação: CPF já cadastrado",
+}
+```
+
+>**Observação:** O campo `code` indica se aquele pacote pode 
+ser executado por todos os nós e `descript`é o tipo de problema que ocorreu caso não possa ser executado.
+
+<h3>Receber Se é o Primeiro da Fila:</h3>
+
+- **Descrição:** Recebe a confirmação de que o banco é o primeiro da fila para processar a mensagem ou não.
+
+- **Método:** POST
+
+- **Rota:** `/receiver_one_queue/<string:event_id>`
+
+- **Resposta:** Retorna o código de status HTTP **200** se a confirmação foi recebida com sucesso.
+
+- **Requisitos:** O parâmetro `event_id` deve conter o identificador único da mensagem que está sendo confirmada e o corpo da mensagem  a ser recebida.
+
+- **Exemplo de Corpo da Requisição:**
+```json
+{
+    "code": true,
+    "descript": "",
+    "msg": "ONE_QUEUE"
+}
+```
+> **Observação:** O campo `code` indica se aquele pacote pode ser executado por todos os nós, `descript` é o tipo de problema que ocorreu caso não possa ser executado e `msg` é o  primeiro da fila para processar a mensagem.
+
+
+<h3>Verificação de está Online:</h3>
+
+- **Descrição:** Verificar se o banco está online.
+
+- **Método:** GET
+
+- **Rota:** `/check`
+
+- **Resposta:** Retorna o código de status HTTP **200** se o banco está online.
+
+
+<h3>Obter Fila de Eventos:</h3>
+
+- **Descrição:** Obter a fila de eventos do banco.
+
+- **Método:** GET
+
+- **Rota:** `/get_queue`
+
+- **Resposta:** Retorna a fila de eventos do banco.
+
+- **Exemplo de Resposta:**
+```json
+[
+    {
+        "sender": 0,
+        "timestamp": [5, 8, 1],
+        "type_msg": "REGISTER",
+        "id": "EV192.168.0.1-1584",
+        "msg": {"mensagem" : "mensagem"}
+    },
+    {
+        "sender": 1,
+        "timestamp": [5, 9, 1],
+        "type_msg": "REGISTER",
+        "id": "EV192.168.0.1-1584",
+        "msg": {"mensagem" : "mensagem"}
+    }
+]
+
+```
+
+
+<h3>Obter ACKs Recebidos:</h3>
+
+- **Descrição:** Obter os ACKs recebidos pelo banco.
+
+- **Método:** GET
+
+- **Rota:** `/get_ack`
+
+- **Resposta:** Retorna os ACKs recebidos pelo banco.
+
+- **Exemplo de Resposta:**
+```json
+{
+    "EV192.168.0.1-1584": 2,
+    "EV192.168.0.1-1585": 1,
+    "EV192.168.0.1-1586": 3
+}
+
+```
+
+<h3>Endpoints para Funcionalidades do Banco<h3>
+
+<h3></h3>
+
+<h3></h3>
+
+<h3></h3>
+
+<h3></h3>
+
+<h3></h3>
+
+<h3></h3>
+
+<h3></h3>
+
+<h3></h3>
+
+<h3></h3>
+
+<h3></h3>
 
 
 </div>
