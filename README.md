@@ -13,6 +13,17 @@
 <div id="descrição"> 
 <h2> Descrição do Projeto</h2>
 
+O Pix é um sistema de pagamento instantâneo desenvolvido pelo Banco Central do Brasil, representa uma revolução do setor financeiro ao facilitar as transações bancárias de forma rápida, segura e acessível. Em resposta à crescente adesão a essa tecnologia, este projeto propõe o desenvolvimento de um sistema semelhante, adaptado para um país sem banco central, visando incluir clientes de diversos bancos em uma solução distribuída.
+
+O sistema será implementado por meio de um consórcio bancário, permitindo a criação e o gerenciamento de contas para depósitos e transferências de valores entre diferentes bancos. Dessa forma, o projeto se estrutura em três componentes principais, cada um com requisitos específicos:
+
+- **Cliente Bancário:** Interface intuitiva para pessoas físicas e jurídicas, permitindo o gerenciamento de suas contas e transações de forma integrada;
+
+- **Servidor Bancário:** Centraliza e controla as transações de forma segura, garantindo que o mesmo dinheiro não seja transferido para mais de uma conta (evitando duplo gasto);
+
+-  **Comunicação Interbancária:** Implementação de uma API que viabilize a troca de dados e comandos entre os diferentes bancos participantes, garantindo uma comunicação eficiente e segura.
+
+
 </div>
 </div>
 
@@ -49,6 +60,8 @@
 <div align="justify">
 <div id="VisaoGeral">
 <h2> Visão Geral do Sistema </h2>
+
+O projeto desenvolvido é um sistema bancário distribuído. Nesse sentido, os bancos podem se comunicar internamente e com toda a rede por meio de um sistema ponto a ponto entre cada nó (banco). Para garantir que os nós trabalhem em **consenso**, evitando a perda e a sobreposição de dados, o que pode causar a duplicidade de dinheiro, o sistema utiliza o algoritmo de **Ordenação Total de *Multicast***. Esse algoritmo será explicado em detalhes nos próximos tópicos. A seguir, é apresentado um diagrama geral do sistema, ilustrando como os bancos se comunicam:
 
 </div>
 </div>
