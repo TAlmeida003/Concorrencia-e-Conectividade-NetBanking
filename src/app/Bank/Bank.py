@@ -45,20 +45,25 @@ class Bank:
         if dict_data.get(str(self.id)):
             for account in dict_data[str(self.id)]:
                 if not self.dict_account.get(int(account)):
-                    raise BankException(f'Conta {account} não encontrada')
+                    raise BankException(f'Conta {account} não encontrada no banco {self.id}')
 
                 cont_deposit = 0
                 cont_wt = 0
                 for package in dict_data[str(self.id)][account]['package']:
+
                     self.dict_account[int(account)].value_neg(package['value'])
                     if package['type'] == Option_Bank.DEPOSIT.value:
                         cont_deposit += package['value']
                     elif package['type'] == Option_Bank.TRANSFER.value and package['pix'] not in self.list_pix_all:
                         raise BankException(f'Chave pix {package["pix"]} não encontrada')
+                    elif package['type'] == Option_Bank.TRANSFER.value and not self.dict_online[self.list_nodes[int(package['pix'].split(':')[0])]]:
+                        raise BankException(f'Banco {package["pix"].split(":")[0]} não está online para transferência')
                     else:
                         cont_wt += package['value']
                         value = cont_wt - cont_deposit
                         self.dict_account[int(account)].is_operation_valid(value, self.id)
+
+        self.bank_is_package(dict_data)
 
     def exe_package(self, dict_data):
         if dict_data.get(str(self.id)):
@@ -88,12 +93,12 @@ class Bank:
 
     def register_user_valid(self, user_name: str, num_register: str):
         if user_name in self.dict_user:
-            raise BankException(f'Nome de usuário "{user_name}" já existe')
+            raise BankException(f'Nome de usuário "{user_name}" já existe no banco {self.id}')
 
         for user in self.dict_user.values():
             if user.num_cadastro == num_register:
                 type_cadastro = 'CPF' if user.type_person == 'PF' else 'CNPJ'
-                raise BankException(f'{type_cadastro} "{num_register}" já cadastrado')
+                raise BankException(f'{type_cadastro} "{num_register}" já cadastrado no banco {self.id}')
 
     def login(self, user_name: str, user_password: str) -> dict[str, str | dict]:
         if user_name not in self.dict_user:
@@ -145,3 +150,8 @@ class Bank:
                     raise BankException(f'Usuário {user} não encontrado')
                 account.add_users(user)
                 self.dict_user[user].add_account(num_account)
+
+    def bank_is_package(self, dict_data) -> None:
+        for node in dict_data:
+            if not self.dict_online[self.list_nodes[int(node)]]:
+                raise BankException(f'Banco {node} não está online')
