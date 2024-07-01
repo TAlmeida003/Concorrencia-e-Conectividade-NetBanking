@@ -91,7 +91,6 @@ def get_ack():
 @app.route('/register-customer', methods=['POST'])
 def register_customer() -> tuple[Response, int]:
     dict_customer: dict = request.json
-
     try:
         utils.is_data_register_user_valid(
             dict_customer['name'],
@@ -100,7 +99,6 @@ def register_customer() -> tuple[Response, int]:
             dict_customer['password'],
             dict_customer['type_person']
         )
-
         event: Event = node.propose_value(dict_customer, Option_Bank.REGISTER.value)
 
         while not event.exe:
@@ -162,7 +160,6 @@ def get_users() -> tuple[Response, int]:
 @app.route('/operations', methods=['POST'])
 def operations() -> tuple[Response, int]:
     operations_package: dict = request.json
-
     event: Event = node.propose_value(operations_package, Option_Bank.PACKAGE.value)
 
     while not event.exe:
@@ -190,3 +187,11 @@ def receiver_pix_all(pix: str) -> Response:
 @app.route('/get_pix_all', methods=['GET'])
 def get_pix_all() -> tuple[Response, int]:
     return jsonify(node.bank.list_pix_all), 200
+
+
+@app.route('/get_account/<string:account>', methods=['GET'])
+def get_account(account: str):
+    try:
+        return jsonify(node.bank.dict_account[int(account)].__dict__), 200
+    except KeyError:
+        return jsonify({'descript': 'Conta não encontrada'}), 400
