@@ -220,9 +220,9 @@ A URL principal da API é: http://localhost:3050
 - **404:** Indica que o dispositivo ou endpoint solicitado não foi encontrado.
 - **500:** Significa que ocorreu um erro interno no servidor.
 
-<h3>Endpoints para Ordenação Total</h3>
+<h3>Endpoints para o Bancos</h3>
 
-Endpoints para a ordenação total de mensagens entre os bancos:
+Endpoints para a ordenação total de mensagens e transações entre os bancos :
 
 <h4>Receber Mensagem:</h4>
 
@@ -297,6 +297,28 @@ ser executado por todos os nós e `descript`é o tipo de problema que ocorreu ca
 }
 ```
 > O campo `code` indica se aquele pacote pode ser executado por todos os nós, `descript` é o tipo de problema que ocorreu caso não possa ser executado e `msg` é o  primeiro da fila para processar a mensagem.
+
+
+<h4>Receber PIX</h4>
+
+- **Descrição**: Recebe uma transação PIX de um banco específico.
+
+- **Método:** POST
+
+- **Rota:** `/receive-pix`
+
+- **Requisitos:** O corpo da requisição deve conter as informações da transação PIX a ser recebida.
+
+- **Exemplo de Corpo da Requisição:**
+```json
+{
+    "sender": "thiago003",
+    "pix": "1:123.123.123-01",
+    "value": 1200.0,
+}
+```
+
+> O campo `sender` é o nome do usuário que está realizando a transação, `pix` é a chave do PIX utilizado e `value` é o valor da transação.
 
 
 <h3>Endpoints para Funcionalidades do Banco</h3>
@@ -384,9 +406,9 @@ Endpoints para as funcionalidades do banco:
 
 <h4>Criar Conta</h4>
 
--**Descrição:** Cria uma conta bancária para um cliente.
+- **Descrição:** Cria uma conta bancária para um cliente.
 
--**Método:** POST
+- **Método:** POST
 
 - **Rota:** `/accounts_user/<string:user_name> `
 
@@ -468,7 +490,7 @@ Endpoints para as funcionalidades do banco:
             "package": [
                 {"type": "TRANSFER", "value": 500.0, "sender": "samara123", "pix": "1:thiago003"},
                 {"type": "TRANSFER", "value": 100.0, "sender": "samara123", "pix": "0:juninho234"},
-                {"type": "TRANSFER", "value": 450.0, "sender": "samara123", "pix": "2:123.123.123-01"}
+                {"type": "TRANSFER", "value": 450.0, "sender": "samara123", "pix": "2:4598596959"}
             ]
         }
     },
@@ -476,8 +498,8 @@ Endpoints para as funcionalidades do banco:
         "2432430": {
             "package": [
                 {"type": "DEPOSIT", "value": 50.0, "sender": "samara123"},
-                {"type": "DEPOSIT", "value": 100.0, "sender": "samara123",},
-                {"type": "DEPOSIT", "value": 450.0, "sender": "samara123",}
+                {"type": "DEPOSIT", "value": 100.0, "sender": "samara123"},
+                {"type": "DEPOSIT", "value": 450.0, "sender": "samara123"}
             ]
         }
     },
@@ -493,6 +515,7 @@ Endpoints para as funcionalidades do banco:
 
 > Corpo do pacote de operações a serem realizadas. A primeira chave é o número do banco, a segunda chave é o número de conta e o campo `package` contém as operações a serem realizadas. Cada operação possui o tipo da operação, o valor, o remetente e/ou o PIX de destino.
 
+>  As operações do pacote só podem ser **DEPOSIT**, **WITHDRAW** ou **TRANSFER**. 
 - **Resposta:** Retorna os status da operação, confirmando ou não a execução do pacote.
 
 - **Exemplo de Resposta:**
