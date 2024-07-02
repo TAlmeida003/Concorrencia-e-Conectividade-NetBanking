@@ -224,15 +224,13 @@ A URL principal da API é: http://localhost:3050
 
 Endpoints para a ordenação total de mensagens entre os bancos:
 
-<h3>Receber Mensagem:</h3>
+<h4>Receber Mensagem:</h4>
 
 - **Descrição:** Recebe uma mensagem de um banco específico, adicionando-a ao buffer de mensagens.
 
 - **Método:** POST
 
 - **Rota:** `/receive-message`
-
-- **Resposta:** Retorna o código de status HTTP **200** se a mensagem foi recebida com sucesso.
 
 - **Requisitos:** O corpo da requisição deve conter as informações da mensagem a ser recebida.
 
@@ -247,9 +245,9 @@ Endpoints para a ordenação total de mensagens entre os bancos:
 }
 ```
 
->**Observação:** O campo `sender` indica o número do banco que enviou a mensagem, `timestamp` é o vetor de relógio vetorial associado à mensagem, `type_msg` é o tipo da mensagem, `id` é o identificador único da mensagem e `msg` é o conteúdo da mensagem.
+> O campo `sender` indica o número do banco que enviou a mensagem, `timestamp` é o vetor de relógio vetorial associado à mensagem, `type_msg` é o tipo da mensagem, `id` é o identificador único da mensagem e `msg` é o conteúdo da mensagem.
 
-<h3>Receber ACK:</h3>
+<h4>Receber ACK:</h4>
 
 - **Descrição:** Recebe um ACK de um banco específico, confirmando a recepção da mensagem.
 
@@ -259,17 +257,13 @@ Endpoints para a ordenação total de mensagens entre os bancos:
 
 - **Requisitos:** O parâmetro `event_id` deve conter o identificador único da mensagem que está sendo confirmada.
 
-- **Resposta:** Retorna o código de status HTTP **200** se o ACK foi recebido com sucesso.
-
-<h3>Iniciar Verificação de se é o Primeiro da Fila:</h3>
+<h4>Iniciar Verificação de se é o Primeiro da Fila:</h4>
 
 - **Descrição:** Inicia a verificação de se o banco é o primeiro da fila para processar a mensagem.
 
 - **Método:** POST
 
 - **Rota:** `/init_check_queue/<string:event_id>`
-
-- **Resposta:** Retorna o código de status HTTP **200** se a verificação foi iniciada com sucesso.
 
 - **Requisitos:** O parâmetro `event_id` deve conter o identificador único da mensagem que está sendo confirmada e o corpo da mensagem  a ser recebida.
 
@@ -281,18 +275,16 @@ Endpoints para a ordenação total de mensagens entre os bancos:
 }
 ```
 
->**Observação:** O campo `code` indica se aquele pacote pode 
+> O campo `code` indica se aquele pacote pode 
 ser executado por todos os nós e `descript`é o tipo de problema que ocorreu caso não possa ser executado.
 
-<h3>Receber Se é o Primeiro da Fila:</h3>
+<h4>Receber Se é o Primeiro da Fila:</h4>
 
 - **Descrição:** Recebe a confirmação de que o banco é o primeiro da fila para processar a mensagem ou não.
 
 - **Método:** POST
 
 - **Rota:** `/receiver_one_queue/<string:event_id>`
-
-- **Resposta:** Retorna o código de status HTTP **200** se a confirmação foi recebida com sucesso.
 
 - **Requisitos:** O parâmetro `event_id` deve conter o identificador único da mensagem que está sendo confirmada e o corpo da mensagem  a ser recebida.
 
@@ -304,94 +296,211 @@ ser executado por todos os nós e `descript`é o tipo de problema que ocorreu ca
     "msg": "ONE_QUEUE"
 }
 ```
-> **Observação:** O campo `code` indica se aquele pacote pode ser executado por todos os nós, `descript` é o tipo de problema que ocorreu caso não possa ser executado e `msg` é o  primeiro da fila para processar a mensagem.
+> O campo `code` indica se aquele pacote pode ser executado por todos os nós, `descript` é o tipo de problema que ocorreu caso não possa ser executado e `msg` é o  primeiro da fila para processar a mensagem.
 
 
-<h3>Verificação de está Online:</h3>
+<h3>Endpoints para Funcionalidades do Banco</h3>
 
-- **Descrição:** Verificar se o banco está online.
+Endpoints para as funcionalidades do banco:
 
-- **Método:** GET
+<h4>Registrar Cliente</h4>
 
-- **Rota:** `/check`
+- **Descrição:** Registra um cliente no banco.
 
-- **Resposta:** Retorna o código de status HTTP **200** se o banco está online.
+- **Método:** POST
 
+- **Rota:** `/register-customer`
 
-<h3>Obter Fila de Eventos:</h3>
+- **Requisitos:** O corpo da requisição deve conter as informações do cliente a ser registrado.
 
-- **Descrição:** Obter a fila de eventos do banco.
-
-- **Método:** GET
-
-- **Rota:** `/get_queue`
-
-- **Resposta:** Retorna a fila de eventos do banco.
-
-- **Exemplo de Resposta:**
+- **Exemplo de Corpo da Requisição:**
 ```json
-[
-    {
-        "sender": 0,
-        "timestamp": [5, 8, 1],
-        "type_msg": "REGISTER",
-        "id": "EV192.168.0.1-1584",
-        "msg": {"mensagem" : "mensagem"}
-    },
-    {
-        "sender": 1,
-        "timestamp": [5, 9, 1],
-        "type_msg": "REGISTER",
-        "id": "EV192.168.0.1-1584",
-        "msg": {"mensagem" : "mensagem"}
-    }
-]
-
+{
+    "name": "Pedro Silva", 
+    "num_cadastro": "123.123.123-00",
+    "user_name": "pedrinho234",
+    "password": "12345678",
+    "type_person": "PF"
+}
 ```
 
+> O campo `name` é o nome completo do cliente, `num_cadastro` é o número de registro (CPF ou CNPJ), `user_name` é o nome de usuário e `password` é a senha de acesso.
 
-<h3>Obter ACKs Recebidos:</h3>
-
-- **Descrição:** Obter os ACKs recebidos pelo banco.
-
-- **Método:** GET
-
-- **Rota:** `/get_ack`
-
-- **Resposta:** Retorna os ACKs recebidos pelo banco.
+- **Resposta:** Retorna os status da operação, confamando ou não o registro do cliente.
 
 - **Exemplo de Resposta:**
 ```json
 {
-    "EV192.168.0.1-1584": 2,
-    "EV192.168.0.1-1585": 1,
-    "EV192.168.0.1-1586": 3
+    "descript": "Cliente pedrinho234 criado com sucesso"
+}
+```
+
+<h4>Login</h4>
+
+- **Descrição:** Realiza o login de um cliente no banco.
+
+- **Método:** GET
+
+- **Rota:** `/login`
+
+- **Requisitos:** O parâmetro `user_name` deve conter o nome de usuário e o parâmetro `password` deve conter a senha de acesso.
+
+- **Exemplo de Requisição:**
+```json
+{
+    "user_name": "renata332",
+    "password": "12345678"
+}
+```
+
+- **Resposta:** retorna os dados do cliente logado ou uma mensagem de erro.
+
+- **Exemplo de Resposta:**
+```json
+{
+    "data": {
+        "accounts": {
+            "0":[
+                [906647, 50.0, "0:123.123.123-01"]
+            ],
+            "1":[
+            ],
+            "2":[
+                [906587, 5250.0, "2:123.123.123-01"],
+                [966587, 7550.0, "2:renata332"]
+            ]
+        },
+        "name": "Renata Silva",
+        "num_cadastro": "123.123.123-01",
+        "type_person": "PF",
+        "user_name": "renata332"
+    },
+    "descript": "Logado com sucesso"
 }
 
 ```
+>O campo `data` contém as informações do cliente logado, incluindo as contas bancárias associadas, o campo `descript` indica se o login foi bem-sucedido ou não.
 
-<h3>Endpoints para Funcionalidades do Banco<h3>
 
-<h3></h3>
+<h4>Criar Conta</h4>
 
-<h3></h3>
+-**Descrição:** Cria uma conta bancária para um cliente.
 
-<h3></h3>
+-**Método:** POST
 
-<h3></h3>
+- **Rota:** `/accounts_user/<string:user_name> `
 
-<h3></h3>
+- **Requisitos:** O parâmetro `user_name` deve conter o nome de usuário e o corpo da requisição deve conter as informações da conta a ser criada.
 
-<h3></h3>
+- **Exemplo de Corpo da Requisição:**
+```json
+{
+    "user_name": "karen123",
+    "password": "12345678",
+    "type_account": "PF",
+    "pix_type": "CPF", 
+    "users": [],
+    "value_init": 250.0
+    }
+```
 
-<h3></h3>
+- **Resposta:** Retorna os status da operação, confirmando ou não a criação da conta.
 
-<h3></h3>
+- **Exemplo de Resposta:**
+```json
+{
+    "descript": "Conta criada com sucesso"
+}
+```
 
-<h3></h3>
+<h4>Acessar conta</h4>
 
-<h3></h3>
+- **Descrição:** Acessa uma conta bancária para um cliente.
 
+- **Método:** GET
+
+- **Rota:** `/get_account/<string:num_account>`
+
+- **Requisitos:** O parâmetro `num_account` deve conter o número da conta a ser acessada.
+
+- **Resposta:** Retorna os dados da conta acessada ou uma mensagem de erro.
+
+- **Exemplo de Resposta:**
+```json
+{
+    "data": {
+        "num_account":906647,
+        "balance":530.0,
+        "name": "Renata Silva",
+        "kay_pix": "123.123.123-01",
+        "type_account": "CONJUNTA",
+        "user_names": ["renata332", "matheus123"],
+        "transactions": [
+            {
+                "type": "DEPOSIT",
+                "app_balance": 530.0,
+                "value": 50.0,
+                "date": "2022-10-10",
+                "made_by": "renata332",
+                "bank_sender": 0
+            }
+        ]
+    },
+    "descript": "Conta acessada com sucesso"
+}
+```
+
+<h4>Operações Bancárias</h4>
+
+- **Descrição:** Realiza operações bancárias para um cliente.
+
+- **Método:** POST
+
+- **Rota:** `/operations`
+
+- **Requisitos:** O corpo da requisição deve conter as informações da operação a ser realizada.
+
+- **Exemplo de Corpo da Requisição:**
+```json
+{
+    "0": {
+        "2432433": {
+            "package": [
+                {"type": "TRANSFER", "value": 500.0, "sender": "samara123", "pix": "1:thiago003"},
+                {"type": "TRANSFER", "value": 100.0, "sender": "samara123", "pix": "0:juninho234"},
+                {"type": "TRANSFER", "value": 450.0, "sender": "samara123", "pix": "2:123.123.123-01"}
+            ]
+        }
+    },
+    "1": {
+        "2432430": {
+            "package": [
+                {"type": "DEPOSIT", "value": 50.0, "sender": "samara123"},
+                {"type": "DEPOSIT", "value": 100.0, "sender": "samara123",},
+                {"type": "DEPOSIT", "value": 450.0, "sender": "samara123",}
+            ]
+        }
+    },
+    "2": {
+        "2432431": {
+            "package": [
+                {"type": "WITHDRAW", "value": 5690.0, "sender": "samara123"}
+            ]
+        }
+    }
+}
+```
+
+> Corpo do pacote de operações a serem realizadas. A primeira chave é o número do banco, a segunda chave é o número de conta e o campo `package` contém as operações a serem realizadas. Cada operação possui o tipo da operação, o valor, o remetente e/ou o PIX de destino.
+
+- **Resposta:** Retorna os status da operação, confirmando ou não a execução do pacote.
+
+- **Exemplo de Resposta:**
+```json
+{
+    "descript": "Pacote de operações executado com sucesso"
+}
+```
 
 </div>
 </div>
