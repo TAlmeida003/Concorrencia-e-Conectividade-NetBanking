@@ -643,7 +643,7 @@ No código fonte, ela está localizada no diretório `src/view` e é composta po
 A imagem abaixo ilustra a estrutura da aplicação cliente:
 
 <p align="center">
-    <img src="img/view.png" width = "300" />
+    <img src="img/view.png" width = "400" />
     </p>
     <p align="center"><strong>Estrutura da aplicação cliente
 </strong></p>
@@ -654,21 +654,21 @@ A imagem abaixo ilustra a estrutura da aplicação cliente:
 O serviço bancário é responsável por gerenciar as operações bancárias, a comunicação entre os bancos e a ordenação total de mensagens entre os nós. No código fonte, ele está localizado no diretório `src/app` e é composto por seis subdiretórios:
 
 - **`API`**: Onde estão as rotas da API REST, utilizadas tanto pelos bancos quanto pelos clientes.
-- 
+
 - **`Bank`**: Onde estão as classes e funções responsáveis por gerenciar as operações bancárias e o gerenciamento dos dados dos clientes e contas bancárias. O módulo conta com os arquivos `Account.py` (dados das contas), `Bank.py` (lógica do banco e armazenamento de dados) e `User.py` (dados dos usuários).
-- 
+ 
 - **`enums`**: Onde estão armazenadas algumas constantes.
-- 
+ 
 - **`Exception`**: Onde estão as classes de exceção personalizadas.
-- 
+ 
 - **`Node`**: Onde estão as classes e funções responsáveis por realizar a ordenação total de mensagens entre os nós e a verificação de falhas dos nós. O módulo conta com os arquivos `Node.py` (lógica da ordenação total de mensagens), `Event.py` (dados das mensagens) e `VectorClock.py` (lógica do relógio vetorial).
-- 
+ 
 - **`utils`**: Onde estão as funções auxiliares, como funções de validação e as requisições HTTP.
 
 A imagem abaixo ilustra a estrutura do serviço bancário:
 
 <p align="center">
-    <img src="img/app.png" width = "300" />
+    <img src="img/app.png" width = "400" />
     </p>
     <p align="center"><strong>Estrutura da aplicação cliente
 </strong></p>
