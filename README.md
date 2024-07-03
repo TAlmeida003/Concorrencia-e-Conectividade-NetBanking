@@ -63,6 +63,13 @@ O sistema será implementado por meio de um consórcio bancário, permitindo a c
 O projeto desenvolvido é um sistema bancário distribuído, onde os bancos se comunicam internamente e com toda a rede por meio de um sistema ponto a ponto entre cada nó (banco). Para garantir que todos os nós operem em consenso e evitem a perda ou sobreposição de dados, o que poderia resultar em duplicidade de transações, o sistema utiliza o **algoritmo de Ordenação Total de *Multicast***. Este algoritmo será detalhado nos próximos tópicos.
 
 Os usuários têm a flexibilidade de se conectar a qualquer um dos bancos para acessar as funcionalidades disponíveis no sistema, o que torna o sistema tolerante a falhas caso um banco específico esteja fora de operação. Abaixo, apresentamos um diagrama geral do sistema, ilustrando como os bancos se comunicam:
+
+<p align="center">
+  <img src="img/DiagramaGeral.png" width = "600" />
+</p>
+<p align="center"><strong>Interface para criar conta bancária
+</strong></p>
+
 </div>
 </div>
 
