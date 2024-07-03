@@ -133,6 +133,11 @@ Neste tópico, são apresentadas as funcionalidades disponíveis pelo sistema:
 
 Uma das funcionalidades do sistema é permitir que qualquer usuário tenha uma conta para acessar toda a rede de bancos. Ao criar uma conta de usuário em um dos bancos, é possível acessar qualquer um dos outros bancos. Para se registrar no sistema, é necessário informar o nome completo, o tipo de pessoa (física ou jurídica), o número de registro (CPF ou CNPJ), o nome de usuário e a senha de acesso. A imagem abaixo ilustra o processo de registro do usuário.
 
+<p align="center">
+  <img src="img/Tela de registro de cliente.png" width = "600" />
+</p>
+<p align="center"><strong>Interface de registro de cliente</strong></p>
+
 > **Observações:**
 > Todos os dados pessoais são únicos; portanto, o sistema não permite novos registros se um usuário já estiver registrado com esses dados. Em caso de registros concorrentes (quando bancos tentam registrar usuários com os mesmos dados), apenas um será registrado.
 
@@ -140,13 +145,32 @@ Uma das funcionalidades do sistema é permitir que qualquer usuário tenha uma c
 
 O sistema também possibilita a criação de contas bancárias para operações e movimentação de dinheiro. Um usuário pode ter várias contas bancárias, tanto em um único banco quanto nos outros bancos da rede. Para criar uma conta bancária, o usuário deve informar em qual banco será criada a conta, o tipo de conta (física, jurídica ou conjunta), e o tipo de PIX para aquela conta, que pode ser o número de registro (CPF ou CNPJ), o nome de usuário, o número da conta, ou um valor aleatório. Além disso, para criar uma conta é necessario disponibilizar um valor inicial maior ou igual a R$ 50,00. A imagem abaixo mostra o processo de registro no sistema.
 
+<p align="center">
+  <img src="img/Tela de criar conta bancaria.png" width = "600" />
+</p>
+<p align="center"><strong>Interface para criar conta bancária
+</strong></p>
+
 > **Observações:** O número de conta criado é aleatório e individual dentro do banco. Em caso de criação concorrente (usuários pedindo para criar uma conta ao mesmo tempo), o sistema possui um gerenciamento interno em cada banco que permite que apenas um usuário crie uma conta por vez. Assim, se dois usuários tentarem criar contas ao mesmo tempo e os números de contas forem iguais, apenas uma será criada, e a outra será negada, sendo gerado um novo número de conta.
 
 <h3>Operações Bancárias</h3>
 
 O programa desenvolvido tem a capacidade de realizar operações bancárias por meio de pacotes (um pacote é um grupo de operações que são executadas de uma só vez), internamente e/ou externamente. Nesse sentido, são disponibilizadas três operações: depósito bancário, saque e transações via PIX. Ao criar um pacote, o usuário pode escolher quais bancos realizarão a operação, quais contas realizarão a ação e quais serão as operações realizadas.
+A imagem abaixo ilustra o processo de criação de um pacote de operações bancárias.
+
+<p align="center">
+  <img src="img/Tela de operação.png" width = "600" />
+</p>
+<p align="center"><strong>Interface para criar pacote de operações bancárias
+</strong></p>
 
 Por exemplo, o usuário A tem uma conta no banco 1 e no banco 2 e deseja realizar o seguinte pacote: depósito de R$ 50,00 e transação via PIX de R$ 150,00 na conta do banco 1, mas também deseja sacar R$ 450,00 no banco 2. Todas essas operações podem ser realizadas em um único pacote de uma só vez. Porém, caso ocorra um erro em uma das operações, o pacote é cancelado. A imagem abaixo mostra um pacote montado.
+
+<p align="center">
+  <img src="img/Pacote.png" width = "600" />
+</p>
+<p align="center"><strong>Interface para mostrar o pacote de operações bancárias pronto
+</strong></p>
 
 > **Observações:** Todas as operações realizadas são enviadas para todos os bancos, permitindo que todos saibam quais operações estão ocorrendo na rede.
 As operações são executadas na mesma ordem entre os nós, garantindo que transações concorrentes entre bancos sejam tratadas.
@@ -155,6 +179,18 @@ O sistema possui um gerenciamento interno onde apenas uma operação pode ser en
 <h3>Extrato Bancário</h3>
  
 Por fim, o banco oferece a possibilidade de acessar os dados de cada conta, permitindo visualizar os dados do(s) responsável(is) pela conta, o saldo atual e um extrato bancário com o histórico de todas as operações realizadas na conta. A imagem abaixo ilustra essa funcionalidade.
+
+<p align="center">
+  <img src="img/Extrato.png" width = "600" />
+</p>
+<p align="center"><strong>Interface para mostrar o extrato bancário de uma conta Individual
+</strong></p>
+
+<p align="center">
+  <img src="img/Extrato de conta conjunta.png"= "600" />
+</p>
+<p align="center"><strong>Inferface para mostrar o extrato bancário de uma conta conjunta
+</strong></p>
 
 </div>
 </div>
@@ -271,7 +307,7 @@ Endpoints para a ordenação total de mensagens e transações entre os bancos :
 ```json
 {
     "code": false,
-    "descript": "Falha na operação: CPF já cadastrado",
+    "descript": "Falha na operação: CPF já cadastrado"
 }
 ```
 
@@ -297,28 +333,6 @@ ser executado por todos os nós e `descript`é o tipo de problema que ocorreu ca
 }
 ```
 > O campo `code` indica se aquele pacote pode ser executado por todos os nós, `descript` é o tipo de problema que ocorreu caso não possa ser executado e `msg` é o  primeiro da fila para processar a mensagem.
-
-
-<h4>Receber PIX</h4>
-
-- **Descrição**: Recebe uma transação PIX de um banco específico.
-
-- **Método:** POST
-
-- **Rota:** `/receive-pix`
-
-- **Requisitos:** O corpo da requisição deve conter as informações da transação PIX a ser recebida.
-
-- **Exemplo de Corpo da Requisição:**
-```json
-{
-    "sender": "thiago003",
-    "pix": "1:123.123.123-01",
-    "value": 1200.0,
-}
-```
-
-> O campo `sender` é o nome do usuário que está realizando a transação, `pix` é a chave do PIX utilizado e `value` é o valor da transação.
 
 
 <h3>Endpoints para Funcionalidades do Banco</h3>
@@ -488,25 +502,25 @@ Endpoints para as funcionalidades do banco:
     "0": {
         "2432433": {
             "package": [
-                {"type": "TRANSFER", "value": 500.0, "sender": "samara123", "pix": "1:thiago003"},
-                {"type": "TRANSFER", "value": 100.0, "sender": "samara123", "pix": "0:juninho234"},
-                {"type": "TRANSFER", "value": 450.0, "sender": "samara123", "pix": "2:4598596959"}
+                {"type": "TRANSFER", "value": 500.0, "sender": 2432433, "pix": "1:thiago003"},
+                {"type": "TRANSFER", "value": 100.0, "sender": 2432433, "pix": "0:juninho234"},
+                {"type": "TRANSFER", "value": 450.0, "sender": 2432433, "pix": "2:mara21"}
             ]
         }
     },
     "1": {
         "2432430": {
             "package": [
-                {"type": "DEPOSIT", "value": 50.0, "sender": "samara123"},
-                {"type": "DEPOSIT", "value": 100.0, "sender": "samara123"},
-                {"type": "DEPOSIT", "value": 450.0, "sender": "samara123"}
+                {"type": "DEPOSIT", "value": 50.0, "sender": 2432433},
+                {"type": "DEPOSIT", "value": 100.0, "sender": 2432433},
+                {"type": "DEPOSIT", "value": 450.0, "sender": 2432433}
             ]
         }
     },
     "2": {
         "2432431": {
             "package": [
-                {"type": "WITHDRAW", "value": 5690.0, "sender": "samara123"}
+                {"type": "WITHDRAW", "value": 5690.0, "sender": 2432433}
             ]
         }
     }
