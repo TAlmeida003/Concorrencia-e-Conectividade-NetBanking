@@ -67,7 +67,7 @@ Os usuários têm a flexibilidade de se conectar a qualquer um dos bancos para a
 <p align="center">
   <img src="img/DiagramaGeral.png" width = "600" />
 </p>
-<p align="center"><strong>Interface para criar conta bancária
+<p align="center"><strong>Diagrama Geral do Sistema
 </strong></p>
 
 </div>
@@ -212,7 +212,39 @@ Em sistemas distribuídos, a ordenação total de mensagens é fundamental para 
 
 <h3>Relógio Vetorial</h3>
 
-Antes de discutir o algoritmo de controle de concorrência, é crucial entender o **relógio vetorial**. Este mecanismo de ***timestamp*** é usado para capturar a ordem causal de eventos entre diferentes processos em um sistema distribuído. Cada processo mantém um vetor de contadores, onde cada entrada representa o número de eventos observados por aquele processo. Ao enviar uma mensagem, um processo inclui uma cópia de seu vetor de relógios. Ao receber uma mensagem, um processo atualiza seu vetor combinando-o com o vetor recebido, garantindo uma visão consistente da ordem de eventos entre todos os processos.
+Antes de discutir o algoritmo de controle de concorrência, é crucial entender o relógio vetorial. Este mecanismo de *timestamp* é usado para capturar a ordem causal de eventos entre diferentes processos em um sistema distribuído. Cada processo mantém um vetor de contadores, onde cada entrada representa o número de eventos observados por aquele processo.
+
+Ao enviar uma mensagem, um processo inclui uma cópia de seu vetor de relógios. Ao receber uma mensagem, um processo atualiza seu vetor combinando-o com o vetor recebido, garantindo uma visão consistente da ordem de eventos entre todos os processos. As próximas imagens ilustram o funcionamento do relógio vetorial e seu uso na ordenação de mensagens.
+
+<p align="center">
+  <img src="img/RelogioVetorial.png" width = "600" />
+</p>
+<p align="center"><strong>Exemplo de rélogio vetorial com 3 processos e 4 eventos
+</strong></p>
+
+<p align="center">
+  <img src="img/bufferDeExecução.png" width = "600" />
+</p>
+<p align="center"><strong>Ordem de execução de mensagens
+com base no relógio vetorial para os 3 processos e 4 eventos
+</strong></p>
+
+
+Em caso de eventos concorrentes, onde dois eventos ocorrem simultaneamente em diferentes processos, o relógio vetorial garante que a ordem dos eventos seja consistente em todos os processos. No entanto, apenas com o relógio vetorial, não é possível determinar qual evento ocorreu primeiro. Quando ocorre um conflito, onde dois relógios são simultaneamente maiores e menores, o **ID** do processo é utilizado para decidir a ordem dos eventos. As imagens a seguir ilustram esse cenário.
+
+<p align="center">
+  <img src="img/relogioConcorrente.png" width = "600" />
+</p>
+<p align="center"><strong>Cenário de eventos concorrentes
+</strong></p>
+
+<p align="center">
+  <img src="img/bufferConcorrente.png" width = "600" />
+</p>
+<p align="center"><strong>Ordem de execução de mensagens com 
+base no ID do processo para eventos concorrentes
+</strong></p>
+
 
 <h3>Ordenação Total com Multicast usando Relógio Vetorial</h3>
 
