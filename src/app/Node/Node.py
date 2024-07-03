@@ -30,10 +30,15 @@ class Node:
         self.ack_lock: Lock = Lock()
 
         utils.fail_dict_peers_online(self.dict_peers_online)
+        self.dict_peers_online[self.peers[self.id]] = True
+
+        Thread(target=self.check_nodes_online).start()
+        self.create_threads_nodes_online()
 
         Thread(target=self.init_check_queue).start()
         Thread(target=self.exe_one_queue).start()
-        Thread(target=self.is_online).start()
+
+
 
     def propose_value(self, value: dict, type_msg: str = 'PROPOSE') -> Event:
         timestamp = self.vector_clock.incrementar()
@@ -195,47 +200,38 @@ class Node:
                 self.FIFO_evento[index].mgs_executed = dict_msg['descript']
             self.controller_num_queue(index, event_id, dict_msg['msg'])
 
-    def is_online(self) -> None:
-        while True:
-            try:
-                time_init = time.time()
-                socket.create_connection(("8.8.8.8", 53), timeout=5)
-                if not self.dict_peers_online[self.peers[self.id]]:
-                    print("O Banco", self.peers[self.id], "retorno")
-                    self.dict_peers_online[self.peers[self.id]] = True
-                    Thread(target=self.check_nodes_online).start()
-                    self.create_threads_nodes_online()
-                utils.delay_time(time_init)
-            except OSError:
-                if self.dict_peers_online[self.peers[self.id]]:
-                    print("Banco caiu: ", self.peers[self.id])
-                utils.fail_dict_peers_online(self.dict_peers_online)
-
     def check_nodes_online(self):
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_serve:
-            print("Servidor criado", self.dict_peers_online)
-            socket_serve.bind((request.HOST, int(self.peers[self.id]) - 1000))
-            socket_serve.listen()
-            while self.dict_peers_online[self.peers[self.id]]:
-                socket_serve.accept()
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_serve:
+                print("Servidor criado", self.dict_peers_online)
+                #socket_serve.bind((self.peers[self.id], int(request.PORT) - 1000))
+                socket_serve.bind((request.HOST, int(self.peers[self.id]) - 1000))
+                socket_serve.listen()
+                while True:
+                    socket_serve.accept()
+        except OSError:
+            print("Não foi possivel iniciar o servidor")
 
     def create_threads_nodes_online(self):
         for node in range(len(self.peers)):
             if node != self.id:
+                #Thread(target=self.check_nodes_connect, args=(self.peers[node],)).start()
                 Thread(target=self.check_nodes_connect, args=(int(self.peers[node]),)).start()
 
     def check_nodes_connect(self, node):
-        while self.dict_peers_online[self.peers[self.id]]:
+        while True:
             try:
                 time_init = time.time()
                 tcp_aux: socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 tcp_aux.settimeout(5)
                 tcp_aux.connect((request.HOST, int(node) - 1000))
+                #tcp_aux.connect((node, int(request.PORT) - 1000))
                 if not self.dict_peers_online[str(node)]:
+                    print("O banco se juntou ao consocio: ", node)
                     self.dict_peers_online[str(node)] = True
                 tcp_aux.close()
                 utils.delay_time(time_init)
             except (OSError, socket.timeout, socket.error):
                 if self.dict_peers_online[str(node)]:
-                    print("Banco caiu: ", node)
+                    print("Banco", node, "saiu do consorcio")
                 self.dict_peers_online[str(node)] = False

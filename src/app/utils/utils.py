@@ -6,8 +6,11 @@ from src.app.Exception.BackException import BankException
 from src.app.Exception.UserException import UserException
 from src.app.Node import Event
 
-LIST_NODES: list[str] = ['3050', '3051', '3052']
+# LIST_NODES: list[str] = ['172.16.103.1', '172.16.103.2', '172.16.103.3', '172.16.103.4', '172.16.103.5', '172.16.103.6',
+#                          '172.16.103.7', '172.16.103.8', '172.16.103.9', '172.16.103.10', '172.16.103.11',
+#                          '172.16.103.12', '172.16.103.13', '172.16.103.14']
 
+LIST_NODES: list[str] = ['3050', '3051', '3052']
 
 def delay_time(time_init: float) -> None:
     final_time: float = time.time()
