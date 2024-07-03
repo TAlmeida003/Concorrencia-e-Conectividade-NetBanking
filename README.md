@@ -623,6 +623,56 @@ Endpoints para as funcionalidades do banco:
 <div id="Organizacao">
 <h2> Organização do Código Fonte </h2>
 
+O código fonte do projeto está organizado em diferentes módulos, cada um responsável por uma parte específica do sistema.
+De maneira geral, a arquitetura se divide em duas partes principais: a aplicação cliente e o serviço bancário. A seguir,
+são apresentadas essas estruturas:
+
+<h3>Aplicação Cliente</h3>
+
+A aplicação cliente é responsável por interagir com o usuário, permitindo o acesso às funcionalidades do sistema. 
+No código fonte, ela está localizada no diretório `src/view` e é composta por quatro subdiretórios:
+
+- **`enums`:** Onde são armazenadas algumas constantes;
+
+- **`options`:** Onde está a lógica de navegação dos menus e telas;
+
+- **`screens`:** Onde estão as telas do sistema;
+
+- **`utils`:** Onde estão as funções auxiliares, como funções de impressão, validação e as requisições HTTP.
+
+A imagem abaixo ilustra a estrutura da aplicação cliente:
+
+<p align="center">
+    <img src="img/view.png" width = "300" />
+    </p>
+    <p align="center"><strong>Estrutura da aplicação cliente
+</strong></p>
+
+
+<h3>Serviço Bancário</h3>
+
+O serviço bancário é responsável por gerenciar as operações bancárias, a comunicação entre os bancos e a ordenação total de mensagens entre os nós. No código fonte, ele está localizado no diretório `src/app` e é composto por seis subdiretórios:
+
+- **`API`**: Onde estão as rotas da API REST, utilizadas tanto pelos bancos quanto pelos clientes.
+- 
+- **`Bank`**: Onde estão as classes e funções responsáveis por gerenciar as operações bancárias e o gerenciamento dos dados dos clientes e contas bancárias. O módulo conta com os arquivos `Account.py` (dados das contas), `Bank.py` (lógica do banco e armazenamento de dados) e `User.py` (dados dos usuários).
+- 
+- **`enums`**: Onde estão armazenadas algumas constantes.
+- 
+- **`Exception`**: Onde estão as classes de exceção personalizadas.
+- 
+- **`Node`**: Onde estão as classes e funções responsáveis por realizar a ordenação total de mensagens entre os nós e a verificação de falhas dos nós. O módulo conta com os arquivos `Node.py` (lógica da ordenação total de mensagens), `Event.py` (dados das mensagens) e `VectorClock.py` (lógica do relógio vetorial).
+- 
+- **`utils`**: Onde estão as funções auxiliares, como funções de validação e as requisições HTTP.
+
+A imagem abaixo ilustra a estrutura do serviço bancário:
+
+<p align="center">
+    <img src="img/app.png" width = "300" />
+    </p>
+    <p align="center"><strong>Estrutura da aplicação cliente
+</strong></p>
+
 </div>
 </div>
 
