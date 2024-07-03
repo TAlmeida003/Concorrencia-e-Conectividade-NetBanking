@@ -153,7 +153,7 @@ Uma das funcionalidades do sistema é permitir que qualquer usuário tenha uma c
 O sistema também possibilita a criação de contas bancárias para operações e movimentação de dinheiro. Um usuário pode ter várias contas bancárias, tanto em um único banco quanto nos outros bancos da rede. Para criar uma conta bancária, o usuário deve informar em qual banco será criada a conta, o tipo de conta (física, jurídica ou conjunta), e o tipo de PIX para aquela conta, que pode ser o número de registro (CPF ou CNPJ), o nome de usuário, o número da conta, ou um valor aleatório. Além disso, para criar uma conta é necessario disponibilizar um valor inicial maior ou igual a R$ 50,00. A imagem abaixo mostra o processo de registro no sistema.
 
 <p align="center">
-  <img src="img/Tela de criar conta bancaria.png" width = "600" />
+  <img src="img/Tela de criar conta bancaria.png" width = "800" />
 </p>
 <p align="center"><strong>Interface para criar conta bancária
 </strong></p>
@@ -166,7 +166,7 @@ O programa desenvolvido tem a capacidade de realizar operações bancárias por 
 A imagem abaixo ilustra o processo de criação de um pacote de operações bancárias.
 
 <p align="center">
-  <img src="img/Tela de operação.png" width = "600" />
+  <img src="img/Tela de operação.png" width = "800" />
 </p>
 <p align="center"><strong>Interface para criar pacote de operações bancárias
 </strong></p>
@@ -174,7 +174,7 @@ A imagem abaixo ilustra o processo de criação de um pacote de operações banc
 Por exemplo, o usuário A tem uma conta no banco 1 e no banco 2 e deseja realizar o seguinte pacote: depósito de R$ 50,00 e transação via PIX de R$ 150,00 na conta do banco 1, mas também deseja sacar R$ 450,00 no banco 2. Todas essas operações podem ser realizadas em um único pacote de uma só vez. Porém, caso ocorra um erro em uma das operações, o pacote é cancelado. A imagem abaixo mostra um pacote montado.
 
 <p align="center">
-  <img src="img/Pacote.png" width = "600" />
+  <img src="img/Pacote.png" width = "800" />
 </p>
 <p align="center"><strong>Interface para mostrar o pacote de operações bancárias pronto
 </strong></p>
@@ -188,13 +188,13 @@ O sistema possui um gerenciamento interno onde apenas uma operação pode ser en
 Por fim, o banco oferece a possibilidade de acessar os dados de cada conta, permitindo visualizar os dados do(s) responsável(is) pela conta, o saldo atual e um extrato bancário com o histórico de todas as operações realizadas na conta. A imagem abaixo ilustra essa funcionalidade.
 
 <p align="center">
-  <img src="img/Extrato.png" width = "600" />
+  <img src="img/Extrato.png" width = "800" />
 </p>
 <p align="center"><strong>Interface para mostrar o extrato bancário de uma conta Individual
 </strong></p>
 
 <p align="center">
-  <img src="img/Extrato de conta conjunta.png"= "600" />
+  <img src="img/Extrato de conta conjunta.png"= "800" />
 </p>
 <p align="center"><strong>Inferface para mostrar o extrato bancário de uma conta conjunta
 </strong></p>
@@ -217,13 +217,13 @@ Antes de discutir o algoritmo de controle de concorrência, é crucial entender 
 Ao enviar uma mensagem, um processo inclui uma cópia de seu vetor de relógios. Ao receber uma mensagem, um processo atualiza seu vetor combinando-o com o vetor recebido, garantindo uma visão consistente da ordem de eventos entre todos os processos. As próximas imagens ilustram o funcionamento do relógio vetorial e seu uso na ordenação de mensagens.
 
 <p align="center">
-  <img src="img/RelogioVetorial.png" width = "600" />
+  <img src="img/RelogioVetorial.png" width = "800" />
 </p>
 <p align="center"><strong>Exemplo de rélogio vetorial com 3 processos e 4 eventos
 </strong></p>
 
 <p align="center">
-  <img src="img/bufferDeExecução.png" width = "600" />
+  <img src="img/bufferDeExecução.png" width = "800" />
 </p>
 <p align="center"><strong>Ordem de execução de mensagens
 com base no relógio vetorial para os 3 processos e 4 eventos
@@ -233,13 +233,13 @@ com base no relógio vetorial para os 3 processos e 4 eventos
 Em caso de eventos concorrentes, onde dois eventos ocorrem simultaneamente em diferentes processos, o relógio vetorial garante que a ordem dos eventos seja consistente em todos os processos. No entanto, apenas com o relógio vetorial, não é possível determinar qual evento ocorreu primeiro. Quando ocorre um conflito, onde dois relógios são simultaneamente maiores e menores, o **ID** do processo é utilizado para decidir a ordem dos eventos. As imagens a seguir ilustram esse cenário.
 
 <p align="center">
-  <img src="img/relogioConcorrente.png" width = "600" />
+  <img src="img/relogioConcorrente.png" width = "800" />
 </p>
 <p align="center"><strong>Cenário de eventos concorrentes
 </strong></p>
 
 <p align="center">
-  <img src="img/bufferConcorrente.png" width = "600" />
+  <img src="img/bufferConcorrente.png" width = "800" />
 </p>
 <p align="center"><strong>Ordem de execução de mensagens com 
 base no ID do processo para eventos concorrentes
@@ -253,7 +253,7 @@ O **algoritmo de ordenação total com *multicast*** pode ser dividido em vário
 1.	**Envio da Mensagem:** Um nó envia uma mensagem para todos os nós da rede, anexando seu vetor de relógios atual;
 
 <p align="center">
-  <img src="img/Ordem1.png" width = "600" />
+  <img src="img/Ordem1.png" width = "800" />
 </p>
 <p align="center"><strong>Dois eventos concorrentes em diferentes processos com as mesagens "Ma" e "Mb"
 </strong></p>
@@ -261,7 +261,7 @@ O **algoritmo de ordenação total com *multicast*** pode ser dividido em vário
 2.  **Recebimento da Mensagem:** Ao receber a mensagem, cada nó a coloca em um *buffer* interno ordenado pelo relógio vetorial associado. Isso garante que todas as mensagens sejam ordenadas de acordo com o relógio vetorial;
 
 <p align="center">
-  <img src="img/Ordem 2.png" width = "600" />
+  <img src="img/Ordem 2.png" width = "800" />
 </p>
 <p align="center"><strong>Distribuição de mensagens em buffers internos ordenados por relógio vetorial em diferentes processos
 </strong></p>
@@ -269,36 +269,37 @@ O **algoritmo de ordenação total com *multicast*** pode ser dividido em vário
 3.	**Confirmação (ACK):** Cada nó envia um ACK para todos os outros nós indicando que recebeu a mensagem;
 
 <p align="center">
-  <img src="img/Ordem3.png" width = "600" />
+  <img src="img/Ordem3.png" width = "800" />
 </p>
 <p align="center"><strong>Confirmação de recebimento de mensagens com ACKs
 </strong></p>
 
 4.	**Verificação e Execução:**
+
     -	Após receber ACKs de todos os nós, o nó remetente verifica se a mensagem no topo de seu *buffer* é a próxima a ser processada. 
 Em seguida, consulta todos os outros nós para verificar se a mensagem no topo de seus *buffers* é a mesma;
 
-    <p align="center">
-    <img src="img/Ordem4.png" width = "600" />
+<p align="center">
+    <img src="img/Ordem4.png" width = "800" />
     </p>
     <p align="center"><strong>Verificação de mensagens no topo do buffer em todos os nós
     </strong></p>
 
     -	Se todas as réplicas concordarem que a mensagem no topo do *buffer* é a próxima na ordem global, o nós a removem do *buffer* e a executa;
   
-    <p align="center">
-    <img src="img/Ordem5.png" width = "600" />
+<p align="center">
+    <img src="img/Ordem5.png" width = "800" />
     </p>
     <p align="center"><strong>Execução de mensagens no topo do buffer
     </strong></p>
 
     -	Caso contrário, o nó aguarda até que todas as mensagens anteriores no *buffer* tenham sido processadas.
 
-    <p align="center">
-    <img src="img/Ordem6.png" width = "600" />
+<p align="center">
+    <img src="img/Ordem6.png" width = "800" />
     </p>
     <p align="center"><strong>Aguardando a execução de mensagens anteriores no buffer em todos os nós e reiniciando a verificação.
-    </strong></p>
+</strong></p>
 
 Este algoritmo pode introduzir latência devido ao número de mensagens necessárias para confirmação e verificação, mas garante que todas as mensagens sejam entregues e processadas na ordem correta. No contexto de sistemas distribuídos como o descrito no projeto, onde operações são agrupadas em pacotes, este método proporciona uma otimização eficiente já que todos os nós já possui a mensagem e garante a consistência e a ordem das operações em todos os nós da rede.
 
