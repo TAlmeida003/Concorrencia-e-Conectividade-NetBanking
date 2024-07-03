@@ -65,7 +65,7 @@ O projeto desenvolvido é um sistema bancário distribuído, onde os bancos se c
 Os usuários têm a flexibilidade de se conectar a qualquer um dos bancos para acessar as funcionalidades disponíveis no sistema, o que torna o sistema tolerante a falhas caso um banco específico esteja fora de operação. Abaixo, apresentamos um diagrama geral do sistema, ilustrando como os bancos se comunicam:
 
 <p align="center">
-  <img src="img/DiagramaGeral.png" width = "600" />
+  <img src="img/DiagramaGeral.png" width = "800" />
 </p>
 <p align="center"><strong>Diagrama Geral do Sistema
 </strong></p>
@@ -141,7 +141,7 @@ Neste tópico, são apresentadas as funcionalidades disponíveis pelo sistema:
 Uma das funcionalidades do sistema é permitir que qualquer usuário tenha uma conta para acessar toda a rede de bancos. Ao criar uma conta de usuário em um dos bancos, é possível acessar qualquer um dos outros bancos. Para se registrar no sistema, é necessário informar o nome completo, o tipo de pessoa (física ou jurídica), o número de registro (CPF ou CNPJ), o nome de usuário e a senha de acesso. A imagem abaixo ilustra o processo de registro do usuário.
 
 <p align="center">
-  <img src="img/Tela de registro de cliente.png" width = "600" />
+  <img src="img/Tela de registro de cliente.png" width = "800" />
 </p>
 <p align="center"><strong>Interface de registro de cliente</strong></p>
 
@@ -279,7 +279,7 @@ O **algoritmo de ordenação total com *multicast*** pode ser dividido em vário
     -	Após receber ACKs de todos os nós, o nó remetente verifica se a mensagem no topo de seu *buffer* é a próxima a ser processada. 
 Em seguida, consulta todos os outros nós para verificar se a mensagem no topo de seus *buffers* é a mesma;
 
-<p align="center">
+    <p align="center">
     <img src="img/Ordem4.png" width = "800" />
     </p>
     <p align="center"><strong>Verificação de mensagens no topo do buffer em todos os nós
@@ -287,7 +287,7 @@ Em seguida, consulta todos os outros nós para verificar se a mensagem no topo d
 
     -	Se todas as réplicas concordarem que a mensagem no topo do *buffer* é a próxima na ordem global, o nós a removem do *buffer* e a executa;
   
-<p align="center">
+    <p align="center">
     <img src="img/Ordem5.png" width = "800" />
     </p>
     <p align="center"><strong>Execução de mensagens no topo do buffer
@@ -295,7 +295,7 @@ Em seguida, consulta todos os outros nós para verificar se a mensagem no topo d
 
     -	Caso contrário, o nó aguarda até que todas as mensagens anteriores no *buffer* tenham sido processadas.
 
-<p align="center">
+    <p align="center">
     <img src="img/Ordem6.png" width = "800" />
     </p>
     <p align="center"><strong>Aguardando a execução de mensagens anteriores no buffer em todos os nós e reiniciando a verificação.
