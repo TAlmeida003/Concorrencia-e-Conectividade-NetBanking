@@ -252,18 +252,53 @@ O **algoritmo de ordenação total com *multicast*** pode ser dividido em vário
 
 1.	**Envio da Mensagem:** Um nó envia uma mensagem para todos os nós da rede, anexando seu vetor de relógios atual;
 
-2.	**Recebimento da Mensagem:** Ao receber a mensagem, cada nó a coloca em um *buffer* interno ordenado pelo relógio vetorial associado. Isso garante que todas as mensagens sejam ordenadas de acordo com o relógio vetorial;
+<p align="center">
+  <img src="img/Ordem1.png" width = "600" />
+</p>
+<p align="center"><strong>Dois eventos concorrentes em diferentes processos com as mesagens "Ma" e "Mb"
+</strong></p>
+
+2.  **Recebimento da Mensagem:** Ao receber a mensagem, cada nó a coloca em um *buffer* interno ordenado pelo relógio vetorial associado. Isso garante que todas as mensagens sejam ordenadas de acordo com o relógio vetorial;
+
+<p align="center">
+  <img src="img/Ordem 2.png" width = "600" />
+</p>
+<p align="center"><strong>Distribuição de mensagens em buffers internos ordenados por relógio vetorial em diferentes processos
+</strong></p>
 
 3.	**Confirmação (ACK):** Cada nó envia um ACK para todos os outros nós indicando que recebeu a mensagem;
 
-4.	**Verificação e Execução:**
-    -	Após receber ACKs de todos os nós, o nó remetente verifica se a mensagem no topo de seu *buffer* é a próxima a ser processada;
+<p align="center">
+  <img src="img/Ordem3.png" width = "600" />
+</p>
+<p align="center"><strong>Confirmação de recebimento de mensagens com ACKs
+</strong></p>
 
-    -	Em seguida, consulta todos os outros nós para verificar se a mensagem no topo de seus *buffers* é a mesma;
+4.	**Verificação e Execução:**
+    -	Após receber ACKs de todos os nós, o nó remetente verifica se a mensagem no topo de seu *buffer* é a próxima a ser processada. 
+Em seguida, consulta todos os outros nós para verificar se a mensagem no topo de seus *buffers* é a mesma;
+
+    <p align="center">
+    <img src="img/Ordem4.png" width = "600" />
+    </p>
+    <p align="center"><strong>Verificação de mensagens no topo do buffer em todos os nós
+    </strong></p>
 
     -	Se todas as réplicas concordarem que a mensagem no topo do *buffer* é a próxima na ordem global, o nós a removem do *buffer* e a executa;
+  
+    <p align="center">
+    <img src="img/Ordem5.png" width = "600" />
+    </p>
+    <p align="center"><strong>Execução de mensagens no topo do buffer
+    </strong></p>
 
     -	Caso contrário, o nó aguarda até que todas as mensagens anteriores no *buffer* tenham sido processadas.
+
+    <p align="center">
+    <img src="img/Ordem6.png" width = "600" />
+    </p>
+    <p align="center"><strong>Aguardando a execução de mensagens anteriores no buffer em todos os nós e reiniciando a verificação.
+    </strong></p>
 
 Este algoritmo pode introduzir latência devido ao número de mensagens necessárias para confirmação e verificação, mas garante que todas as mensagens sejam entregues e processadas na ordem correta. No contexto de sistemas distribuídos como o descrito no projeto, onde operações são agrupadas em pacotes, este método proporciona uma otimização eficiente já que todos os nós já possui a mensagem e garante a consistência e a ordem das operações em todos os nós da rede.
 
