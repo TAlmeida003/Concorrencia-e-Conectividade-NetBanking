@@ -17,12 +17,11 @@ O Pix é um sistema de pagamento instantâneo desenvolvido pelo Banco Central do
 
 O sistema será implementado por meio de um consórcio bancário, permitindo a criação e o gerenciamento de contas para depósitos e transferências de valores entre diferentes bancos. Dessa forma, o projeto se estrutura em três componentes principais, cada um com requisitos específicos:
 
-- **Cliente Bancário:** Interface intuitiva para pessoas físicas e jurídicas, permitindo o gerenciamento de suas contas e transações de forma integrada;
+- **Cliente Bancário:** Oferece uma interface para pessoas físicas e jurídicas gerenciarem contas e transações de forma integrada. Isso inclui criar contas, realizar transações entre diferentes bancos ou internamente no mesmo banco, e lidar com transações sequenciais e concorrentes;
 
-- **Servidor Bancário:** Centraliza e controla as transações de forma segura, garantindo que o mesmo dinheiro não seja transferido para mais de uma conta (evitando duplo gasto);
+- **Servidor Bancário:** Centraliza e controla transações para garantir que o dinheiro não seja duplicado. Isso inclui verificar conexões, gerenciar erros e executar o sistema em containers Docker;
 
--  **Comunicação Interbancária:** Implementação de uma API que viabilize a troca de dados e comandos entre os diferentes bancos participantes, garantindo uma comunicação eficiente e segura.
-
+-  **Comunicação Interbancária:**  implementa uma API para troca segura e eficiente de dados entre os bancos, mantendo a integridade e confidencialidade das informações.
 
 </div>
 </div>
@@ -194,7 +193,7 @@ Por fim, o banco oferece a possibilidade de acessar os dados de cada conta, perm
 </strong></p>
 
 <p align="center">
-  <img src="img/Extrato de conta conjunta.png"= "800" />
+  <img src="img/Extrato de conta conjunta.png" width = "800" />
 </p>
 <p align="center"><strong>Inferface para mostrar o extrato bancário de uma conta conjunta
 </strong></p>
@@ -681,6 +680,68 @@ A imagem abaixo ilustra a estrutura do serviço bancário:
 <div align="justify">
 <div id="Logica">
 <h2> Lógica de Funcionamento do Sistema </h2>
+
+Nessa essa será abordado a lógico utlizada no sistema, mostrando como cade parte se comunica e compri com as necessidade do sistema.
+
+<h3>Configuração da Rede</h3>
+
+A rede de bancos é composta por um número **n** de nós. Para teste do sistema, foram utilizados **14** IPs diferentes, cada um representando um banco. Caso seja necessário adicionar ou remover algum banco, basta alterar a lista de IPs no arquivo `src/app/utils/utils.py`. A porta de comunicação entre os bancos é **3050**, mas também pode ser alterada no arquivo `src/app/utils/request.py`. Os trechos de código abaixo mostram a configuração da rede:
+
+```python
+# Arquivo: src/app/utils/utils.py
+# Lista de IPs dos nós da rede de bancos
+
+LIST_NODES: list[str] = [
+    '172.16.103.1', '172.16.103.2', '172.16.103.3', '172.16.103.4', 
+    '172.16.103.5', '172.16.103.6', '172.16.103.7', '172.16.103.8', 
+    '172.16.103.9', '172.16.103.10', '172.16.103.11', '172.16.103.12', 
+    '172.16.103.13', '172.16.103.14'
+]
+```
+
+```python
+# Arquivo: src/app/utils/request.py
+# Porta de comunicação entre os bancos
+
+PORT: int = 3050
+```
+
+Outra informação importante em relação à rede é que a porta **2050** é utilizada para verificar se o nó está ativo.
+
+> Ao iniciar o programa, o usuário deve informar o IP da máquina que ele está usando. No sistema, os bancos são vistos como sendo o índice da sua posição na lista. Por exemplo, o banco `172.16.103.2` é o banco 1 para o sistema.
+
+<h3>Execução de Pacotes Bancários e Registro de Clientes</h3>
+
+Para garantir a atomicidade das operações bancárias e a inexistência de usuários com os mesmos dados no sistema, utilizando como base a ordenação total, o sistema realiza uma verificação de confirmação para determinar se é o primeiro da fila. 
+
+Antes de enviar as confirmações, é analisado se todos os dados podem ser processados sem problemas. Se isso for possível, a operação é enviada para todos os nós juntamente com a confirmação de que pode ser executada naquele nó. Caso algum nó indique que a operação não é possível, ela é marcada como não executável. A imagem ilustra um pacote que pode ser executado e um que não pode.
+
+Em relação aos registros, verifica-se se não existe um usuário com os mesmos dados. Como é realizada uma operação por vez em toda a rede, não é possível haver dois usuários com os mesmos dados. A imagem ilustra o processo de registro.
+
+O uso dessa verificação otimiza os processos, já que são necessárias apenas três mensagens por nó para realizar uma operação e não há a necessidade de novas mensagens.
+
+<h3>Concorrência em Sistemas Distribuídos </h3>
+
+Em um ambiente onde múltiplas transações ocorrem concorrentemente no mesmo banco, é essencial aplicar estratégias robustas para garantir que o saldo das contas permaneça correto e que os clientes possam realizar suas transações sem problemas. Para lidar com isso:
+
+A concorrência é crucial em sistemas que lidam com operações bancárias, permitindo que várias transações ocorram simultaneamente. Em sistemas distribuídos de bancos financeiros, essa concorrência pode ser interna, envolvendo partes do mesmo sistema acessando recursos compartilhados localmente, ou externa, onde múltiplos bancos coordenam o acesso a dados compartilhados.
+
+Para gerenciar eficientemente cada requisição, **threads** são utilizadas para executar operações locais dentro de cada banco. O uso de **locks** é crucial para assegurar que apenas uma thread por vez tenha acesso a recursos críticos, como bases de dados ou operações sensíveis, prevenindo assim conflitos de dados.
+
+*Frameworks* como o *Flask* suportam ambientes *multi-threaded*, facilitando a implementação segura de lógicas concorrentes em cada nó distribuído.
+
+Quando vários bancos externos desejam acessar o mesmo recurso, é crucial manter uma ordem total para evitar conflitos de dados na rede interbancária. Isso garante a integridade das transações financeiras, permitindo que apenas uma requisição seja executada por vez, assegurando que o saldo das contas e a realização das transações pelos clientes sejam consistentes e corretas.
+
+
+### Confiabilidade no Sistema Distribuído
+
+Assegurar uma conexão confiável é crucial para o funcionamento eficaz do sistema distribuído. No projeto em questão, a confiabilidade é alcançada por meio de um robusto mecanismo de **heartbeat**, onde cada nó monitora continuamente o status de conexão dos outros nós. Cada banco é configurado com um servidor **socket**, e múltiplas threads são utilizadas para estabelecer e verificar essas conexões entre os bancos.
+
+Quando um nó não responde dentro de um intervalo de 5 segundos, é considerado que o banco falhou, e essa informação é imediatamente disseminada para toda a rede. Da mesma forma, ao detectar o retorno de um banco, o sistema aguarda um período de 5 segundos para garantir a estabilidade da conexão antes de confirmar seu retorno.
+
+Dada a complexidade inerente à implementação de um sistema descentralizado, medidas adicionais são adotadas para lidar com eventos de falha ou retorno. Em tais casos, todos os elementos do buffer são marcados como não executáveis, e a aplicação é prontamente notificada sobre possíveis problemas na rede. Essa abordagem garante a integridade dos dados e a continuidade das operações mesmo diante de eventos imprevistos.
+
+>É importante ressaltar que, em um ambiente descentralizado, não é possível garantir com certeza absoluta a falha imediata de um nó, devido à natureza assíncrona da comunicação e à possibilidade de falsos positivos, como atrasos na rede que podem ser confundidos com falhas. No entanto, através de estratégias cuidadosamente planejadas, é viável mitigar os efeitos dessas incertezas e fortalecer a robustez do sistema como um todo.
 
 </div>
 </div>
