@@ -1,5 +1,5 @@
 <p align="center">
-<img src="img/logo.png" style="border-radius: 10%;" width = "200" />
+<img src="img/logo.png" width = "200" />
 </p>
 
 <h1 align="center">NetBanking
