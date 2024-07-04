@@ -733,7 +733,7 @@ A seguir é o formato da mensagem quando não pode ser executado por um nó:
 ```json
 {
     "code": false,
-    "msg": "NOT_ONE_QUEUE",
+    "msg": "ONE_QUEUE",
     "descript": "A conta 2313123 não possui saldo suficiente para realizar a operação no banco 1"
 }
 ```
@@ -747,6 +747,13 @@ Em um ambiente onde múltiplas transações ocorrem concorrentemente no mesmo ba
 A concorrência é crucial em sistemas que lidam com operações bancárias, permitindo que várias transações ocorram simultaneamente. Em sistemas distribuídos de bancos financeiros, essa concorrência pode ser interna, envolvendo partes do mesmo sistema acessando recursos compartilhados localmente, ou externa, onde múltiplos bancos coordenam o acesso a dados compartilhados.
 
 Para gerenciar eficientemente cada requisição, **threads** são utilizadas para executar operações locais dentro de cada banco. O uso de **locks** é crucial para assegurar que apenas uma thread por vez tenha acesso a recursos críticos, como bases de dados ou operações sensíveis, prevenindo assim conflitos de dados.
+A imagem ilustre a concorrência interna em um banco:
+
+<p align="center">
+    <img src="img/banco sequencial.png" width = "800" />
+    </p>
+    <p align="center"><strong>Concorrência interna em um banco
+</strong></p>
 
 *Frameworks* como o *Flask* suportam ambientes *multi-threaded*, facilitando a implementação segura de lógicas concorrentes em cada nó distribuído.
 
@@ -871,8 +878,8 @@ Para obter a imagem Docker pré-construída, execute o seguinte comando:
 
 Após obter as imagens, execute o seguinte comando para iniciar os containers Docker:
     
-        docker run --network  host -iti -e IP=IP_DA_MAQUINA talmeida003/banco_app:app
-        docker run --network  host -iti talmeida003/banco_view:view
+    docker run --network  host -iti -e IP=IP_DA_MAQUINA talmeida003/banco_app:app
+    docker run --network  host -iti talmeida003/banco_view:view
 </div>
 </div>
 
