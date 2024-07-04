@@ -714,7 +714,7 @@ Outra informação importante em relação à rede é que a porta **2050** é ut
 
 Para garantir a atomicidade das operações bancárias e a inexistência de usuários com os mesmos dados no sistema, utilizando como base a ordenação total, o sistema realiza uma verificação de confirmação para determinar se é o primeiro da fila. 
 
-Antes de enviar as confirmações, é analisado se todos os dados podem ser processados sem problemas. Se isso for possível, a operação é enviada para todos os nós juntamente com a confirmação de que pode ser executada naquele nó. Caso algum nó indique que a operação não é possível, ela é marcada como não executável. A imagem ilustra um pacote que pode ser executado e um que não pode.
+Antes de enviar as confirmações que é o primeiro do *buffer*, é analisado se todos os dados podem ser processados sem problemas dentro daquele banco. Se isso for possível, a validação é enviada para todos os nós juntamente com a confirmação de que pode ser executada naquele nó. Caso algum nó indique que a operação não é possível, ela é marcada como não executável, iso garante que todos os pacotes funcioraram de maneira atômica. A imagem ilustra um pacote que pode ser executado e um que não pode.
 
 Em relação aos registros, verifica-se se não existe um usuário com os mesmos dados. Como é realizada uma operação por vez em toda a rede, não é possível haver dois usuários com os mesmos dados. A imagem ilustra o processo de registro.
 
@@ -750,7 +750,19 @@ Dada a complexidade inerente à implementação de um sistema descentralizado, m
 
 <div align="justify">
 <div id="Testes">
-<h2> Testes </h2>
+<h2> Testes Realizados</h2>
+
+Para assegurar a integridade do sistema, foram conduzidos uma série abrangente de testes, cobrindo cada componente individualmente. Os testes foram projetados para avaliar as funcionalidades do sistema em cenários concorrentes. Utilizamos arquivos Python com asyncio e aiohttp para simular a concorrência necessária.
+
+Os testes estão organizados no diretório `tests`, divididos em arquivos separados correspondentes a cada parte do sistema. Abaixo estão detalhados os principais testes realizados:
+
+- **Teste de Registro e Login de Cliente:** Verifica a capacidade do sistema em registrar e autenticar clientes de forma sequencial e concorrente, independentemente do tipo (pessoa física ou jurídica) e do banco, garantindo a integridade e segurança das contas bancárias, evitando duplicação de dados.
+
+- **Teste de Criação de Conta Bancária:** Avalia se o sistema é capaz de criar contas individuais, conjuntas, físicas ou jurídicas, verificando a correta inicialização do saldo, o tipo de serviço PIX configurado e a precisão dos dados.
+
+- **Operações Bancárias:** Verifica se o sistema executa operações como depósito, saque e transferência de forma concorrente e sequencial, assegurando a consistência dos saldos das contas e a atomicidade das transações.
+
+> Estes testes foram conduzidos em um ambiente local, simulando a comunicação entre bancos e clientes, além do tratamento de concorrência, para garantir a robustez e confiabilidade do sistema distribuído de bancos financeiros.
 
 </div>
 </div>
@@ -760,6 +772,13 @@ Dada a complexidade inerente à implementação de um sistema descentralizado, m
 <div align="justify">
 <div id="Conclusao">
 <h2> Conclusão </h2>
+
+
+Com base nas discussões anteriores e nos componentes abordados, podemos concluir que o projeto de sistema distribuído de bancos financeiros representa uma solução inovadora para integrar clientes de diferentes instituições bancárias em um ambiente distribuído. A implementação de um consórcio bancário, junto com uma arquitetura baseada em API REST e comunicação interbancária segura, proporciona uma base sólida para transações financeiras rápidas e seguras.
+
+Os requisitos do projeto, incluindo a gestão de contas e transações concorrentes, destacam a necessidade de uma abordagem robusta e escalável para lidar com os desafios da interconexão bancária. A ênfase na confiabilidade, integridade dos dados e tolerância a falhas, demonstrada através de algoritmos de ordenação total de multicast e containers Docker, sublinha o compromisso em oferecer um sistema bancário distribuído eficiente.
+
+Em resumo, este projeto não apenas respondeu às demandas por um sistema financeiro distribuído, mas também proporcionou um avanço significativo no desenvolvimento de soluções adaptadas para um ambiente sem banco central, promovendo maior inclusão e eficiência no setor financeiro.
 
 </div>
 </div>
