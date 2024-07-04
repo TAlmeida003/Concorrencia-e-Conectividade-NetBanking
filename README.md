@@ -798,14 +798,14 @@ Para executar o projeto sem *Docker*, siga estes passos:
 **Passo 1: Clonar o Repositório**
 
 Abra o terminal e execute o seguinte comando para obter o código do repositório:
-    
-    git clone https://github.com/TAlmeida003/Concorrencia-e-Conectividade-PBL2-Banco.git
+
+    git clone https://github.com/TAlmeida003/Concorrencia-e-Conectividade-PBL2-Banco-Distribuidos.git
 
 **Passo 2: Acessar o Diretório do Projeto**
 
 Navegue para o diretório clonado:
 
-    cd Concorrencia-e-Conectividade-PBL2-Banco
+    cd Concorrencia-e-Conectividade-PBL2-Banco-Distribuidos
 
 **Passo 3: Instalar as Dependências**
 
@@ -816,9 +816,15 @@ Execute o seguinte comando para instalar as dependências do projeto:
     
 **Passo 4: Executar os Projetos**
 
-Execute o seguinte comando para iniciar a aplicação:
+Execute o seguinte comando para iniciar o servidor do banco:
     
-    $env:NAME="NOME_BANCO"; $env:AGENCIA="NUM_AGENCIA"; python src/app
+    $env:IP="IP_DA_MAQUINA"; python src/app
+
+> **Nota Importante:** Substitua `IP_DA_MAQUINA` pelo IP da máquina que está sendo utilizada.
+
+Execute o seguinte comando para iniciar a aplicação cliente:
+
+    python src/view
 
 <h3> Docker </h3>
 
@@ -826,10 +832,27 @@ Execute o seguinte comando para iniciar a aplicação:
 
 Para executar o projeto, é necessário ter o *Docker* instalado na máquina. Tendo o *Docker* instalado, basta executar os seguintes comandos:
 
-    docker build -t app .
-    docker run -p NUM_AGENCIA:NUM_AGENCIA -it -e NAME=NOME_BANCO -e AGENCIA=NUM_AGENCIA app
-    docker run --network host -it -e NAME=NOME_BANCO -e AGENCIA=NUM_AGENCIA app
+    docker build -t app -f DockerfileApp .
+    docker build -t view -f DockerfileView .
 
+Após construir as imagens *Docker*, execute o seguinte comando para iniciar os containers *Docker*:
+
+    docker run --network  host -iti -e IP=IP_DA_MAQUINA app
+    docker run --network  host -iti view
+
+> **Nota Importante:** Substitua `IP_DA_MAQUINA` pelo IP da máquina que está sendo utilizada.
+
+Docker Pull:
+
+Para obter a imagem Docker pré-construída, execute o seguinte comando:
+
+    docker pull talmeida003/banco_app:app
+    docker pull talmeida003/banco_view:view
+
+Após obter as imagens, execute o seguinte comando para iniciar os containers Docker:
+    
+        docker run --network  host -iti -e IP=IP_DA_MAQUINA talmeida003/banco_app:app
+        docker run --network  host -iti talmeida003/banco_view:view
 </div>
 </div>
 
