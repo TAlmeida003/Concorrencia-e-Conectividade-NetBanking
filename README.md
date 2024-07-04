@@ -750,7 +750,7 @@ Para gerenciar eficientemente cada requisição, **threads** são utilizadas par
 A imagem ilustre a concorrência interna em um banco:
 
 <p align="center">
-    <img src="img/banco sequencial.png" width = "800" />
+    <img src="img/concorrente .png" width = "800" />
     </p>
     <p align="center"><strong>Concorrência interna em um banco
 </strong></p>
