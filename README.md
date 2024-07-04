@@ -859,13 +859,13 @@ Execute o seguinte comando para iniciar a aplicação cliente:
 
 Para executar o projeto, é necessário ter o *Docker* instalado na máquina. Tendo o *Docker* instalado, basta executar os seguintes comandos:
 
-    docker build -t app -f DockerfileApp .
-    docker build -t view -f DockerfileView .
+    docker build -t banco_app -f DockerfileApp .
+    docker build -t banco_view -f DockerfileView .
 
 Após construir as imagens *Docker*, execute o seguinte comando para iniciar os containers *Docker*:
 
-    docker run --network  host -iti -e IP=IP_DA_MAQUINA app
-    docker run --network  host -iti view
+    docker run --network  host -iti -e IP=IP_DA_MAQUINA banco_app
+    docker run --network  host -iti banco_view
 
 > **Nota Importante:** Substitua `IP_DA_MAQUINA` pelo IP da máquina que está sendo utilizada.
 
@@ -873,13 +873,13 @@ Docker Pull:
 
 Para obter a imagem Docker pré-construída, execute o seguinte comando:
 
-    docker pull talmeida003/banco_app:app
-    docker pull talmeida003/banco_view:view
+    docker pull talmeida003/banco_app:banco_app
+    docker pull talmeida003/banco_view:banco_view
 
 Após obter as imagens, execute o seguinte comando para iniciar os containers Docker:
     
-    docker run --network  host -iti -e IP=IP_DA_MAQUINA talmeida003/banco_app:app
-    docker run --network  host -iti talmeida003/banco_view:view
+    docker run --network  host -iti -e IP=IP_DA_MAQUINA talmeida003/banco_app:banco_app
+    docker run --network  host -iti talmeida003/banco_view:banco_view
 </div>
 </div>
 
