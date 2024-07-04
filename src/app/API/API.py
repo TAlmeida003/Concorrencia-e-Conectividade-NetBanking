@@ -12,8 +12,8 @@ from flask import Flask, jsonify, request, Response
 
 app = Flask(__name__)
 
-PORT = os.getenv('P', '3050')
-node = Node(utils.LIST_NODES.index(PORT), utils.LIST_NODES)
+IP = os.getenv('IP', '172.16.103.1')
+node = Node(utils.LIST_NODES.index(IP), utils.LIST_NODES)
 
 '''
                             ============= ROTAS DA ORDENAÇÃO TOTAL ==============
@@ -149,7 +149,7 @@ def get_count(user_name: str) -> tuple[dict[int, list[list[int | float]]], int]:
     list_accounts_value: list[list[int | float]] = []
     for account in node.bank.dict_user[user_name].accounts:
         list_accounts_value.append([account, node.bank.dict_account[account].balance, node.bank.dict_account[account].kay_pix])
-    return {str(utils.LIST_NODES.index(PORT)): list_accounts_value}, 200
+    return {str(utils.LIST_NODES.index(IP)): list_accounts_value}, 200
 
 
 @app.route('/get_users', methods=['GET'])
@@ -195,3 +195,8 @@ def get_account(account: str):
         return jsonify(node.bank.dict_account[int(account)].__dict__), 200
     except KeyError:
         return jsonify({'descript': 'Conta não encontrada'}), 400
+
+
+# @app.route('/get_users', methods=['GET'])
+# def get_users() -> tuple[Response, int]:
+#     return jsonify([user.__dict__ for user in node.bank.dict_user.values()]), 200

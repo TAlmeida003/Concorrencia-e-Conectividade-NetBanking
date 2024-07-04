@@ -204,8 +204,8 @@ class Node:
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_serve:
                 print("Servidor criado", self.dict_peers_online)
-                #socket_serve.bind((self.peers[self.id], int(request.PORT) - 1000))
-                socket_serve.bind((request.HOST, int(self.peers[self.id]) - 1000))
+                socket_serve.bind((self.peers[self.id], int(request.PORT) - 1000))
+                # socket_serve.bind((request.HOST, int(self.peers[self.id]) - 1000))
                 socket_serve.listen()
                 while True:
                     socket_serve.accept()
@@ -215,8 +215,8 @@ class Node:
     def create_threads_nodes_online(self):
         for node in range(len(self.peers)):
             if node != self.id:
-                #Thread(target=self.check_nodes_connect, args=(self.peers[node],)).start()
-                Thread(target=self.check_nodes_connect, args=(int(self.peers[node]),)).start()
+                Thread(target=self.check_nodes_connect, args=(self.peers[node],)).start()
+                # Thread(target=self.check_nodes_connect, args=(int(self.peers[node]),)).start()
 
     def check_nodes_connect(self, node):
         while True:
@@ -224,8 +224,8 @@ class Node:
                 time_init = time.time()
                 tcp_aux: socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 tcp_aux.settimeout(5)
-                tcp_aux.connect((request.HOST, int(node) - 1000))
-                #tcp_aux.connect((node, int(request.PORT) - 1000))
+                # tcp_aux.connect((request.HOST, int(node) - 1000))
+                tcp_aux.connect((node, int(request.PORT) - 1000))
                 if not self.dict_peers_online[str(node)]:
                     print("O banco se juntou ao consocio: ", node)
                     self.dict_peers_online[str(node)] = True

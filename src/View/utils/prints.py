@@ -68,5 +68,6 @@ def get_display_option(num_option: str, name_option: str) -> None:
 
 def get_display_option_two(list_option: list[str]):
     for i in range(1, len(list_option), 2):
-        print(f"[ {i: ^1} ] - {list_option[i - 1]:^26}        [ {i + 1:^1} ] - {list_option[i]:^26}".center(170))
-        jump_line(3)
+        string = f"        [ {i: ^1} ] - {list_option[i - 1]:^26}        [ {i + 1:^1} ] - {list_option[i]:^26}"
+        print(f"|{string: ^86}|".center(168))
+        jump_line(5)

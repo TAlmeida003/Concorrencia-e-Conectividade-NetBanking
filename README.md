@@ -46,7 +46,7 @@ O sistema será implementado por meio de um consórcio bancário, permitindo a c
         <li><a href="#API"> API REST </a></li>
         <li><a href="#Organizacao"> Organização do Código Fonte </a></li>
         <li><a href="#Logica"> Lógica de Funcionamento do Sistema </a></li>
-        <li><a href="#Testes"> Testes </a></li>
+        <li><a href="#Testes"> Testes Realizados</a></li>
         <li><a href="#Conclusao"> Conclusão </a></li>
         <li><a href="#exe"> Execução do Projeto </a></li>
         <li><a href="#Referencias"> Referências </a></li>
@@ -714,9 +714,29 @@ Outra informação importante em relação à rede é que a porta **2050** é ut
 
 Para garantir a atomicidade das operações bancárias e a inexistência de usuários com os mesmos dados no sistema, utilizando como base a ordenação total, o sistema realiza uma verificação de confirmação para determinar se é o primeiro da fila. 
 
-Antes de enviar as confirmações que é o primeiro do *buffer*, é analisado se todos os dados podem ser processados sem problemas dentro daquele banco. Se isso for possível, a validação é enviada para todos os nós juntamente com a confirmação de que pode ser executada naquele nó. Caso algum nó indique que a operação não é possível, ela é marcada como não executável, iso garante que todos os pacotes funcioraram de maneira atômica. A imagem ilustra um pacote que pode ser executado e um que não pode.
+Antes de enviar as confirmações que é o primeiro do *buffer*, é analisado se todos os dados podem ser processados sem problemas dentro daquele banco. Se isso for possível, a validação é enviada para todos os nós juntamente com a confirmação de que pode ser executada naquele nó. Caso algum nó indique que a operação não é possível, ela é marcada como não executável, iso garante que todos os pacotes funcioraram de maneira atômica. O
+formato da mensagem de confirmação que é a mesma no topo do buffer tem o seguinte formato:
 
-Em relação aos registros, verifica-se se não existe um usuário com os mesmos dados. Como é realizada uma operação por vez em toda a rede, não é possível haver dois usuários com os mesmos dados. A imagem ilustra o processo de registro.
+```json
+{
+    "code": true,
+    "msg": "ONE_QUEUE",
+    "descript": ""
+}
+```
+> O campo `code` é um booleano que indica que o pacote/registro pode ser executado pelo nó, `msg` é uma mensagem 
+> de confirmação que é o primeiro da fila do nó e `descript` é uma mensagem de erro caso o pacote/registro não possa ser executado.
+
+Em relação aos registros, verifica-se se não existe um usuário com os mesmos dados. Como é realizada uma operação por vez em toda a rede, não é possível haver dois usuários com os mesmos dados. 
+A seguir é o formato da mensagem quando não pode ser executado por um nó:
+
+```json
+{
+    "code": false,
+    "msg": "NOT_ONE_QUEUE",
+    "descript": "A conta 2313123 não possui saldo suficiente para realizar a operação no banco 1"
+}
+```
 
 O uso dessa verificação otimiza os processos, já que são necessárias apenas três mensagens por nó para realizar uma operação e não há a necessidade de novas mensagens.
 

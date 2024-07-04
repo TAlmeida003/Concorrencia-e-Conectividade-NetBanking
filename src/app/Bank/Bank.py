@@ -4,14 +4,14 @@ from src.app.Exception.AccountException import AccountException
 from src.app.Exception.BackException import BankException
 from src.app.utils import utils, request
 from src.app.enums import Option_Bank
-from threading import Thread
+from threading import Thread, Lock
 
 
 class Bank:
     def __init__(self, id_node, list_nodes: list[str], dict_online: dict[str, bool]) -> None:
         self.id = id_node
         self.list_nodes: list[str] = list_nodes
-
+        self.lock: Lock = Lock()
         self.dict_online: dict[str, bool] = dict_online
         self.dict_user: dict[str, User] = {}
         self.dict_account: dict[int, Account] = {}
@@ -76,12 +76,14 @@ class Bank:
                     elif package['type'] == Option_Bank.TRANSFER.value:
                         self.transfer_main(package, int(account))
 
+        for node in dict_data:
+            for account in dict_data[node]:
+                for package in dict_data[node][account]['package']:
+                    if (package['type'] == Option_Bank.TRANSFER.value) and int(package['pix'].split(':')[0]) == int(self.id):
+                        self.receiver_pix(package)
+
     def transfer_main(self, dict_data: dict[str, str | float], account: int) -> None:
         self.dict_account[account].transfer(dict_data['value'], dict_data['sender'], self.id)
-        if dict_data['pix'].split(':')[0] != self.list_nodes[self.id]:  # Transferência entre bancos
-            request.post_receiver_pix(dict_data, int(dict_data['pix'].split(':')[0]), self.list_nodes, self.dict_online)
-        else:  # Transferência interna
-            self.receiver_pix(dict_data)
 
     def receiver_pix(self, dict_data: dict[str, str | float]) -> None:
         account: int = self.dict_pix[dict_data['pix']]
@@ -123,20 +125,21 @@ class Bank:
         if user_name not in self.dict_user:
             raise BankException('Usuário não encontrado')
 
-        num_account: int = utils.get_account(list(self.dict_account))
-        kay_pix: str = utils.generate_pix_key(user_name, num_account, pix_type, self.dict_user[user_name].num_cadastro,
-                                              list(self.dict_pix), self.id
-                                              )
+        with self.lock:
+            num_account: int = utils.get_account(list(self.dict_account))
+            kay_pix: str = utils.generate_pix_key(user_name, num_account, pix_type, self.dict_user[user_name].num_cadastro,
+                                                  list(self.dict_pix), self.id
+                                                  )
 
-        account: Account = Account(type_account, password, num_account, value_init)
-        account.add_users(user_name)
-        account.set_pix_key(kay_pix)
+            account: Account = Account(type_account, password, num_account, value_init)
+            account.add_users(user_name)
+            account.set_pix_key(kay_pix)
 
-        self.add_user_account(users, type_account, num_account, account)
-        self.dict_account[num_account] = account
-        self.dict_pix[kay_pix] = num_account
-        self.dict_user[user_name].add_account(num_account)
-        self.list_pix_all.append(kay_pix)
+            self.add_user_account(users, type_account, num_account, account)
+            self.dict_account[num_account] = account
+            self.dict_pix[kay_pix] = num_account
+            self.dict_user[user_name].add_account(num_account)
+            self.list_pix_all.append(kay_pix)
 
         for node in range(len(self.list_nodes)):
             if node != self.id and self.dict_online[self.list_nodes[node]]:
