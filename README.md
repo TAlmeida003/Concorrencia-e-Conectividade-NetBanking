@@ -377,11 +377,18 @@ Endpoints para a ordenação total de mensagens e transações entre os bancos :
 
 - **Requisitos:** O parâmetro `event_id` deve conter o identificador único da mensagem que está sendo confirmada e o corpo da mensagem  a ser recebida.
 
-- **Exemplo de Corpo da Requisição:**
+- **Exemplos de Corpo da Requisição:**
 ```json
 {
     "code": false,
     "descript": "Falha na operação: CPF já cadastrado"
+}
+```
+
+```json
+{
+    "code": true,
+    "descript": ""
 }
 ```
 
@@ -404,6 +411,14 @@ ser executado por todos os nós e `descript`é o tipo de problema que ocorreu ca
     "code": true,
     "descript": "",
     "msg": "ONE_QUEUE"
+}
+```
+
+```json
+{
+    "code": true,
+    "descript": "",
+    "msg": "NOT_ONE_QUEUE"
 }
 ```
 > O campo `code` indica se aquele pacote pode ser executado por todos os nós, `descript` é o tipo de problema que ocorreu caso não possa ser executado e `msg` é o  primeiro da fila para processar a mensagem.
@@ -440,8 +455,18 @@ Endpoints para as funcionalidades do banco:
 
 - **Exemplo de Resposta:**
 ```json
+200 
+
 {
     "descript": "Cliente pedrinho234 criado com sucesso"
+}
+```
+
+```json
+400
+
+{
+    "descript": "pedrinho234 já foi cadastrado"
 }
 ```
 
@@ -467,6 +492,8 @@ Endpoints para as funcionalidades do banco:
 
 - **Exemplo de Resposta:**
 ```json
+200
+
 {
     "data": {
         "accounts": {
@@ -488,6 +515,14 @@ Endpoints para as funcionalidades do banco:
     "descript": "Logado com sucesso"
 }
 
+```
+
+```json
+400
+
+{
+    "descript": "usuario não encontrado"
+}
 ```
 >O campo `data` contém as informações do cliente logado, incluindo as contas bancárias associadas, o campo `descript` indica se o login foi bem-sucedido ou não.
 
@@ -518,8 +553,18 @@ Endpoints para as funcionalidades do banco:
 
 - **Exemplo de Resposta:**
 ```json
+200
+
 {
     "descript": "Conta criada com sucesso"
+}
+```
+
+```json
+400
+
+{
+    "descript": "PIX já foi cadastrado"
 }
 ```
 
@@ -537,6 +582,8 @@ Endpoints para as funcionalidades do banco:
 
 - **Exemplo de Resposta:**
 ```json
+200
+
 {
     "data": {
         "num_account":906647,
@@ -560,6 +607,13 @@ Endpoints para as funcionalidades do banco:
 }
 ```
 
+```json
+400
+
+{
+    "descript": "Conta não encontrada"
+}
+```
 <h4>Operações Bancárias</h4>
 
 - **Descrição:** Realiza operações bancárias para um cliente.
@@ -608,8 +662,18 @@ Endpoints para as funcionalidades do banco:
 
 - **Exemplo de Resposta:**
 ```json
+200
+
 {
     "descript": "Pacote de operações executado com sucesso"
+}
+```
+
+```json
+400
+
+{
+    "descript": "Falha na operação: a conta não possui sando no banco 0"
 }
 ```
 
@@ -712,7 +776,7 @@ Outra informação importante em relação à rede é que a porta **2050** é ut
 
 <h3>Execução de Pacotes Bancários e Registro de Clientes</h3>
 
-Para garantir a atomicidade das operações bancárias e a inexistência de usuários com os mesmos dados no sistema, utilizando como base a ordenação total, o sistema realiza uma verificação de confirmação para determinar se é o primeiro da fila. 
+Para garantir a atomicidade das operações bancárias e a inexistência de usuários com os mesmos dados no sistema, utilizando como base a ordenação total, o sistema realiza uma verificação na confirmação para determinar se é o primeiro da fila. 
 
 Antes de enviar as confirmações que é o primeiro do *buffer*, é analisado se todos os dados podem ser processados sem problemas dentro daquele banco. Se isso for possível, a validação é enviada para todos os nós juntamente com a confirmação de que pode ser executada naquele nó. Caso algum nó indique que a operação não é possível, ela é marcada como não executável, iso garante que todos os pacotes funcioraram de maneira atômica. O
 formato da mensagem de confirmação que é a mesma no topo do buffer tem o seguinte formato:
@@ -724,6 +788,15 @@ formato da mensagem de confirmação que é a mesma no topo do buffer tem o segu
     "descript": ""
 }
 ```
+
+```json
+{
+    "code": false,
+    "msg": "ONE_QUEUE",
+    "descript": "A conta 2313123 não possui saldo suficiente para realizar a operação no banco 1"
+}
+```
+
 > O campo `code` é um booleano que indica que o pacote/registro pode ser executado pelo nó, `msg` é uma mensagem 
 > de confirmação que é o primeiro da fila do nó e `descript` é uma mensagem de erro caso o pacote/registro não possa ser executado.
 
@@ -734,7 +807,7 @@ A seguir é o formato da mensagem quando não pode ser executado por um nó:
 {
     "code": false,
     "msg": "ONE_QUEUE",
-    "descript": "A conta 2313123 não possui saldo suficiente para realizar a operação no banco 1"
+    "descript": "CPF já cadastrado"
 }
 ```
 
