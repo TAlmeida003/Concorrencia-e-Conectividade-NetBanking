@@ -454,7 +454,7 @@ Endpoints para as funcionalidades do banco:
 - **Resposta:** Retorna os status da operação, confamando ou não o registro do cliente.
 
 - **Exemplo de Resposta:**
-```json
+```http
 200 
 
 {
@@ -462,7 +462,7 @@ Endpoints para as funcionalidades do banco:
 }
 ```
 
-```json
+```http
 400
 
 {
@@ -491,7 +491,7 @@ Endpoints para as funcionalidades do banco:
 - **Resposta:** retorna os dados do cliente logado ou uma mensagem de erro.
 
 - **Exemplo de Resposta:**
-```json
+```http
 200
 
 {
@@ -517,7 +517,7 @@ Endpoints para as funcionalidades do banco:
 
 ```
 
-```json
+```http
 400
 
 {
@@ -552,7 +552,7 @@ Endpoints para as funcionalidades do banco:
 - **Resposta:** Retorna os status da operação, confirmando ou não a criação da conta.
 
 - **Exemplo de Resposta:**
-```json
+```http
 200
 
 {
@@ -560,7 +560,7 @@ Endpoints para as funcionalidades do banco:
 }
 ```
 
-```json
+```http
 400
 
 {
@@ -581,7 +581,7 @@ Endpoints para as funcionalidades do banco:
 - **Resposta:** Retorna os dados da conta acessada ou uma mensagem de erro.
 
 - **Exemplo de Resposta:**
-```json
+```http
 200
 
 {
@@ -607,7 +607,7 @@ Endpoints para as funcionalidades do banco:
 }
 ```
 
-```json
+```http
 400
 
 {
@@ -661,7 +661,7 @@ Endpoints para as funcionalidades do banco:
 - **Resposta:** Retorna os status da operação, confirmando ou não a execução do pacote.
 
 - **Exemplo de Resposta:**
-```json
+```http
 200
 
 {
@@ -669,7 +669,7 @@ Endpoints para as funcionalidades do banco:
 }
 ```
 
-```json
+```http
 400
 
 {
