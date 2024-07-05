@@ -823,7 +823,7 @@ Para gerenciar eficientemente cada requisição, **threads** são utilizadas par
 A imagem ilustre a concorrência interna em um banco:
 
 <p align="center">
-    <img src="img/concorrente .png" width = "800" />
+    <img src="img/concorrente .png" width = "1000" />
     </p>
     <p align="center"><strong>Concorrência interna em um banco
 </strong></p>
@@ -946,13 +946,13 @@ Docker Pull:
 
 Para obter a imagem Docker pré-construída, execute o seguinte comando:
 
-    docker pull talmeida003/banco_app:banco_app
-    docker pull talmeida003/banco_view:banco_view
+    docker pull thiago003/banco_app:banco_app
+    docker pull thiago003/banco_view:banco_view
 
 Após obter as imagens, execute o seguinte comando para iniciar os containers Docker:
     
-    docker run --network  host -iti -e IP=IP_DA_MAQUINA talmeida003/banco_app:banco_app
-    docker run --network  host -iti talmeida003/banco_view:banco_view
+    docker run --network  host -iti -e IP=IP_DA_MAQUINA thiago003/banco_app:banco_app
+    docker run --network  host -iti thiago003/banco_view:banco_view
 </div>
 </div>
 
