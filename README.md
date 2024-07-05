@@ -238,9 +238,9 @@ Em caso de eventos concorrentes, onde dois eventos ocorrem simultaneamente em di
 </strong></p>
 
 <p align="center">
-  <img src="img/bufferConcorrente.png" width = "800" />
+  <img src="img/buffer.png" width = "800" />
 </p>
-<p align="center"><strong>Ordem de execução de mensagens com 
+<p align="center"><strong>Ordem de execução de mensagens com e sem 
 base no ID do processo para eventos concorrentes
 </strong></p>
 
