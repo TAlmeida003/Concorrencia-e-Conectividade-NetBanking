@@ -812,6 +812,18 @@ A seguir é o formato da mensagem quando não pode ser executado por um nó:
 ```
 
 O uso dessa verificação otimiza os processos, já que são necessárias apenas três mensagens por nó para realizar uma operação e não há a necessidade de novas mensagens.
+Para exemplificar melhor essa *pre-execução*, a imagem abaixo mostra o fluxo de execução de um pacote de operações bancárias:
+
+<p align="center">
+    <img src="img/diagramaTemporal.png" width = "1000" />
+    </p>
+    <p align="center"><strong>Fluxo de execução de um pacote de operações bancárias
+</strong></p>
+
+> Observação: A criação do ID do pacote é feita dentro do primeiro banco que recebeu a requisição. O ID é composto pelo
+> string EV + IP do banco + um número aleatório. Antes de criar o ID, é verificado se ele já existe dentro do banco.
+> Isso garante que não haja pacotes com o mesmo ID.
+
 
 <h3>Concorrência em Sistemas Distribuídos </h3>
 
@@ -823,7 +835,7 @@ Para gerenciar eficientemente cada requisição, **threads** são utilizadas par
 A imagem ilustre a concorrência interna em um banco:
 
 <p align="center">
-    <img src="img/concorrente .png" width = "1000" />
+    <img src="img/BufferFinal.png" width = "1000" />
     </p>
     <p align="center"><strong>Concorrência interna em um banco
 </strong></p>
@@ -955,6 +967,8 @@ Após obter as imagens, execute o seguinte comando para iniciar os containers Do
     docker run --network  host -iti thiago003/banco_view:banco_view
 </div>
 </div>
+
+> **Nota Importante:** Substitua `IP_DA_MAQUINA` pelo IP da máquina que está sendo utilizada.
 
 ![-----------------------------------------------------](img/len.png)
 <div align="justify">
