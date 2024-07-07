@@ -211,9 +211,9 @@ Em sistemas distribuídos, a ordenação total de mensagens é fundamental para 
 
 <h3>Relógio Vetorial</h3>
 
-Antes de discutir o algoritmo de controle de concorrência, é crucial entender o relógio vetorial. Este mecanismo de *timestamp* é usado para capturar a ordem causal de eventos entre diferentes processos em um sistema distribuído. Cada processo mantém um vetor de contadores, onde cada entrada representa o número de eventos observados por aquele processo.
+Antes de discutir o algoritmo de controle de concorrência, é crucial entender o **relógio vetorial**. Este mecanismo de *timestamp* é usado para capturar a ordem causal de eventos entre diferentes processos em um sistema distribuído. Cada processo mantém um vetor de contadores, onde cada entrada representa o número de eventos observados por aquele processo.
 
-Ao enviar uma mensagem, um processo inclui uma cópia de seu vetor de relógios. Ao receber uma mensagem, um processo atualiza seu vetor combinando-o com o vetor recebido, garantindo uma visão consistente da ordem de eventos entre todos os processos. As próximas imagens ilustram o funcionamento do relógio vetorial e seu uso na ordenação de mensagens.
+Ao enviar uma mensagem, um processo inclui uma cópia de seu vetor de relógios. Ao receber uma mensagem, um processo atualiza seu vetor combinando-o com o vetor recebido, garantindo uma visão consistente da ordem de eventos entre todos os processos. Essas mensagens são colocadas no buffer com base em seu valor de relógio, utilizando a estrutura de dados **heap** para facilitar o processo. As próximas imagens ilustram o funcionamento do relógio vetorial e seu uso na ordenação de mensagens.
 
 <p align="center">
   <img src="img/RelogioVetorial.png" width = "800" />
@@ -812,7 +812,7 @@ A seguir é o formato da mensagem quando não pode ser executado por um nó:
 ```
 
 O uso dessa verificação otimiza os processos, já que são necessárias apenas três mensagens por nó para realizar uma operação e não há a necessidade de novas mensagens.
-Para exemplificar melhor essa *pre-execução*, a imagem abaixo mostra o fluxo de execução de um pacote de operações bancárias:
+Para exemplificar melhor essa **pre-execução**, a imagem abaixo mostra o fluxo de execução de um pacote de operações bancárias:
 
 <p align="center">
     <img src="img/diagramaTemporal.png" width = "1000" />
@@ -847,15 +847,15 @@ Quando vários bancos externos desejam acessar o mesmo recurso, é crucial mante
 
 ### Confiabilidade no Sistema Distribuído
 
-Garantir uma conexão confiável é essencial para o funcionamento eficaz do sistema distribuído. No projeto em questão, essa confiabilidade é obtida por meio de um robusto mecanismo de **heartbeat**, no qual cada nó monitora continuamente o status de conexão dos outros nós. Cada banco é configurado com um servidor **socket**, e múltiplas threads são utilizadas para estabelecer e verificar essas conexões entre os bancos.
+Garantir uma conexão confiável é essencial para o funcionamento eficaz do sistema distribuído. No projeto em questão, essa confiabilidade é obtida por meio de um robusto mecanismo de **heartbeat**, no qual cada nó monitora continuamente o status de conexão dos outros nós. Cada banco é configurado com um servidor **socket**, e múltiplas *threads* são utilizadas para estabelecer e verificar essas conexões entre os bancos.
 
 Quando um nó não responde dentro de um intervalo de 5 segundos, é considerado que o banco falhou, e essa informação é imediatamente disseminada por toda a rede. Da mesma forma, ao detectar o retorno de um banco, o sistema aguarda um período de 5 segundos para garantir a estabilidade da conexão antes de confirmar seu retorno.
 
-Devido à complexidade inerente à implementação de um sistema descentralizado, medidas adicionais são adotadas para lidar com eventos de falha ou retorno. Em tais casos, todos os elementos do buffer são marcados como não executáveis, e a aplicação é prontamente notificada sobre possíveis problemas na rede. Essa abordagem garante a integridade dos dados e a continuidade das operações mesmo diante de eventos imprevistos.
+Devido à complexidade inerente à implementação de um sistema descentralizado, medidas adicionais são adotadas para lidar com eventos de falha ou retorno. Em tais casos, todos os elementos do *buffer* são marcados como não executáveis, e a aplicação é prontamente notificada sobre possíveis problemas na rede. Essa abordagem garante a integridade dos dados e a continuidade das operações mesmo diante de eventos imprevistos.
 
 Para garantir a coordenação e a integridade da rede em situações de falha ou retorno, o processo é realizado em dois passos:
 
-1.  O nó coordenador detecta a falha no buffer e envia um multicast para todos os nós da rede, solicitando que todos interrompam as operações e parem de executar novas transações. Após esse aviso, é aguardado um período de 10 segundos para que todas as mensagens em trânsito cheguem aos nós. Em seguida, o buffer de todos os nós é apagado, e o término dessa fase é reportado ao coordenador.
+1.  O nó coordenador detecta a falha no *buffer* e envia um *multicast* para todos os nós da rede, solicitando que todos interrompam as operações e parem de executar novas transações. Após esse aviso, é aguardado um período de 10 segundos para que todas as mensagens em trânsito cheguem aos nós. Em seguida, o *buffer* de todos os nós é apagado, e o término dessa fase é reportado ao coordenador.
 
     <p align="center">
         <img src="img/fase 1.png" width = "1000" />
@@ -863,7 +863,7 @@ Para garantir a coordenação e a integridade da rede em situações de falha ou
         <p align="center"><strong>Detecção de falha e interrupção de operações
     </strong></p>
 
-2. O coordenador envia um multicast para todos os nós, instruindo-os a liberar a rede e retomar a execução dos pacotes recebidos durante o período de interrupção ou após ele.
+2. O coordenador envia um *multicast* para todos os nós, instruindo-os a liberar a rede e retomar a execução dos pacotes recebidos durante o período de interrupção ou após ele.
 
     <p align="center">
         <img src="img/fase2.png" width = "1000" />
@@ -882,7 +882,7 @@ Para garantir a coordenação e a integridade da rede em situações de falha ou
 <div id="Testes">
 <h2> Testes Realizados</h2>
 
-Para assegurar a integridade do sistema, foram conduzidos uma série abrangente de testes, cobrindo cada componente individualmente. Os testes foram projetados para avaliar as funcionalidades do sistema em cenários concorrentes. Utilizamos arquivos Python com asyncio e aiohttp para simular a concorrência necessária.
+Para assegurar a integridade do sistema, foram conduzidos uma série abrangente de testes, cobrindo cada componente individualmente. Os testes foram projetados para avaliar as funcionalidades do sistema em cenários concorrentes. Utilizamos arquivos *Python* com *asyncio* e *aiohttp* para simular a concorrência necessária.
 
 Os testes estão organizados no diretório `tests`, divididos em arquivos separados correspondentes a cada parte do sistema. Abaixo estão detalhados os principais testes realizados:
 
@@ -906,7 +906,7 @@ Os testes estão organizados no diretório `tests`, divididos em arquivos separa
 
 Com base nas discussões anteriores e nos componentes abordados, podemos concluir que o projeto de sistema distribuído de bancos financeiros representa uma solução inovadora para integrar clientes de diferentes instituições bancárias em um ambiente distribuído. A implementação de um consórcio bancário, junto com uma arquitetura baseada em API REST e comunicação interbancária segura, proporciona uma base sólida para transações financeiras rápidas e seguras.
 
-Os requisitos do projeto, incluindo a gestão de contas e transações concorrentes, destacam a necessidade de uma abordagem robusta e escalável para lidar com os desafios da interconexão bancária. A ênfase na confiabilidade, integridade dos dados e tolerância a falhas, demonstrada através de algoritmos de ordenação total de multicast e containers Docker, sublinha o compromisso em oferecer um sistema bancário distribuído eficiente.
+Os requisitos do projeto, incluindo a gestão de contas e transações concorrentes, destacam a necessidade de uma abordagem robusta e escalável para lidar com os desafios da interconexão bancária. A ênfase na confiabilidade, integridade dos dados e tolerância a falhas, demonstrada através de algoritmos de ordenação total de multicast e containers *Docker*, sublinha o compromisso em oferecer um sistema bancário distribuído eficiente.
 
 Em resumo, este projeto não apenas respondeu às demandas por um sistema financeiro distribuído, mas também proporcionou um avanço significativo no desenvolvimento de soluções adaptadas para um ambiente sem banco central, promovendo maior inclusão e eficiência no setor financeiro.
 
