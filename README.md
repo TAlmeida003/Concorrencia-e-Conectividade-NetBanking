@@ -441,9 +441,9 @@ Endpoints para as funcionalidades do banco:
 - **Exemplo de Corpo da Requisição:**
 ```json
 {
-    "name": "Pedro Silva", 
+    "name": "Samara Ferreira", 
     "num_cadastro": "123.123.123-00",
-    "user_name": "pedrinho234",
+    "user_name": "mara21",
     "password": "12345678",
     "type_person": "PF"
 }
@@ -466,7 +466,7 @@ Endpoints para as funcionalidades do banco:
 400
 
 {
-    "descript": "pedrinho234 já foi cadastrado"
+    "descript": "mara21 já foi cadastrado"
 }
 ```
 
@@ -483,7 +483,7 @@ Endpoints para as funcionalidades do banco:
 - **Exemplo de Requisição:**
 ```json
 {
-    "user_name": "renata332",
+    "user_name": "silvio123",
     "password": "12345678"
 }
 ```
@@ -504,13 +504,13 @@ Endpoints para as funcionalidades do banco:
             ],
             "2":[
                 [906587, 5250.0, "2:123.123.123-01"],
-                [966587, 7550.0, "2:renata332"]
+                [966587, 7550.0, "2:silvio123"]
             ]
         },
-        "name": "Renata Silva",
+        "name": "Silvio Azevedo",
         "num_cadastro": "123.123.123-01",
         "type_person": "PF",
-        "user_name": "renata332"
+        "user_name": "silvio123"
     },
     "descript": "Logado com sucesso"
 }
@@ -540,7 +540,7 @@ Endpoints para as funcionalidades do banco:
 - **Exemplo de Corpo da Requisição:**
 ```json
 {
-    "user_name": "karen123",
+    "user_name": "sival323",
     "password": "12345678",
     "type_account": "PF",
     "pix_type": "CPF", 
@@ -588,17 +588,17 @@ Endpoints para as funcionalidades do banco:
     "data": {
         "num_account":906647,
         "balance":530.0,
-        "name": "Renata Silva",
+        "name": "Thiago Almeida",
         "kay_pix": "123.123.123-01",
         "type_account": "CONJUNTA",
-        "user_names": ["renata332", "matheus123"],
+        "user_names": ["mara21", "silvio123"],
         "transactions": [
             {
                 "type": "DEPOSIT",
                 "app_balance": 530.0,
                 "value": 50.0,
                 "date": "2022-10-10",
-                "made_by": "renata332",
+                "made_by": "mara21",
                 "bank_sender": 0
             }
         ]
