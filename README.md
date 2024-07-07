@@ -847,11 +847,29 @@ Quando vários bancos externos desejam acessar o mesmo recurso, é crucial mante
 
 ### Confiabilidade no Sistema Distribuído
 
-Assegurar uma conexão confiável é crucial para o funcionamento eficaz do sistema distribuído. No projeto em questão, a confiabilidade é alcançada por meio de um robusto mecanismo de **heartbeat**, onde cada nó monitora continuamente o status de conexão dos outros nós. Cada banco é configurado com um servidor **socket**, e múltiplas threads são utilizadas para estabelecer e verificar essas conexões entre os bancos.
+Garantir uma conexão confiável é essencial para o funcionamento eficaz do sistema distribuído. No projeto em questão, essa confiabilidade é obtida por meio de um robusto mecanismo de **heartbeat**, no qual cada nó monitora continuamente o status de conexão dos outros nós. Cada banco é configurado com um servidor **socket**, e múltiplas threads são utilizadas para estabelecer e verificar essas conexões entre os bancos.
 
-Quando um nó não responde dentro de um intervalo de 5 segundos, é considerado que o banco falhou, e essa informação é imediatamente disseminada para toda a rede. Da mesma forma, ao detectar o retorno de um banco, o sistema aguarda um período de 5 segundos para garantir a estabilidade da conexão antes de confirmar seu retorno.
+Quando um nó não responde dentro de um intervalo de 5 segundos, é considerado que o banco falhou, e essa informação é imediatamente disseminada por toda a rede. Da mesma forma, ao detectar o retorno de um banco, o sistema aguarda um período de 5 segundos para garantir a estabilidade da conexão antes de confirmar seu retorno.
 
-Dada a complexidade inerente à implementação de um sistema descentralizado, medidas adicionais são adotadas para lidar com eventos de falha ou retorno. Em tais casos, todos os elementos do buffer são marcados como não executáveis, e a aplicação é prontamente notificada sobre possíveis problemas na rede. Essa abordagem garante a integridade dos dados e a continuidade das operações mesmo diante de eventos imprevistos.
+Devido à complexidade inerente à implementação de um sistema descentralizado, medidas adicionais são adotadas para lidar com eventos de falha ou retorno. Em tais casos, todos os elementos do buffer são marcados como não executáveis, e a aplicação é prontamente notificada sobre possíveis problemas na rede. Essa abordagem garante a integridade dos dados e a continuidade das operações mesmo diante de eventos imprevistos.
+
+Para garantir a coordenação e a integridade da rede em situações de falha ou retorno, o processo é realizado em dois passos:
+
+1. O nó coordenador detecta a falha no buffer e envia um multicast para todos os nós da rede, solicitando que todos interrompam as operações e parem de executar novas transações. Após esse aviso, é aguardado um período de 10 segundos para que todas as mensagens em trânsito cheguem aos nós. Em seguida, o buffer de todos os nós é apagado, e o término dessa fase é reportado ao coordenador.
+
+<p align="center">
+    <img src="img/fase 1.png" width = "1000" />
+    </p>
+    <p align="center"><strong>Detecção de falha e interrupção de operações
+</strong></p>
+
+2. O coordenador envia um multicast para todos os nós, instruindo-os a liberar a rede e retomar a execução dos pacotes recebidos durante o período de interrupção ou após ele.
+
+<p align="center">
+    <img src="img/fase2.png" width = "1000" />
+    </p>
+    <p align="center"><strong>Liberação da rede e retomada das operações
+</strong></p>
 
 >É importante ressaltar que, em um ambiente descentralizado, não é possível garantir com certeza absoluta a falha imediata de um nó, devido à natureza assíncrona da comunicação e à possibilidade de falsos positivos, como atrasos na rede que podem ser confundidos com falhas. No entanto, através de estratégias cuidadosamente planejadas, é viável mitigar os efeitos dessas incertezas e fortalecer a robustez do sistema como um todo.
 
