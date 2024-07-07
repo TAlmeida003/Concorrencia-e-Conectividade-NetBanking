@@ -993,5 +993,16 @@ Após obter as imagens, execute o seguinte comando para iniciar os containers Do
 <div id="Referencias">
 <h2> Referências </h2>
 
+> Python. **threading — Thread-based parallelism**. Disponível em: <https://docs.python.org/3/library/threading.html>. Acesso em: 10 de maio de 2024.
+> 
+> 
+> Python. **requests — HTTP for Humans**. Disponível em: <https://docs.python-requests.org/en/latest/>. Acesso em: 10 de maio de 2024.
+> 
+> Flask. **Flask — A Python Microframework**. Disponível em: <https://flask.palletsprojects.com/en/2.0.x/>. Acesso em: 10 de maio de 2024.
+> 
+> Docker. **Docker Documentation**. Disponível em: <https://docs.docker.com/>. Acesso em: 10 de maio de 2024.
+> 
+> Marcus Carvalho. **Sistemas Distribuídos - 5.2 Relógios lógicos** <https://www.youtube.com/watch?v=xK0K3RY5xco&t=94s>. Acesso em: 10 de maio de 2024.
+
 </div>
 </div>
