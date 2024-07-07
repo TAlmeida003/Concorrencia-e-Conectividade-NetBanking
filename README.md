@@ -855,21 +855,21 @@ Devido à complexidade inerente à implementação de um sistema descentralizado
 
 Para garantir a coordenação e a integridade da rede em situações de falha ou retorno, o processo é realizado em dois passos:
 
-1. O nó coordenador detecta a falha no buffer e envia um multicast para todos os nós da rede, solicitando que todos interrompam as operações e parem de executar novas transações. Após esse aviso, é aguardado um período de 10 segundos para que todas as mensagens em trânsito cheguem aos nós. Em seguida, o buffer de todos os nós é apagado, e o término dessa fase é reportado ao coordenador.
+1.  O nó coordenador detecta a falha no buffer e envia um multicast para todos os nós da rede, solicitando que todos interrompam as operações e parem de executar novas transações. Após esse aviso, é aguardado um período de 10 segundos para que todas as mensagens em trânsito cheguem aos nós. Em seguida, o buffer de todos os nós é apagado, e o término dessa fase é reportado ao coordenador.
 
-<p align="center">
-    <img src="img/fase 1.png" width = "1000" />
-    </p>
-    <p align="center"><strong>Detecção de falha e interrupção de operações
-</strong></p>
+    <p align="center">
+        <img src="img/fase 1.png" width = "1000" />
+        </p>
+        <p align="center"><strong>Detecção de falha e interrupção de operações
+    </strong></p>
 
 2. O coordenador envia um multicast para todos os nós, instruindo-os a liberar a rede e retomar a execução dos pacotes recebidos durante o período de interrupção ou após ele.
 
-<p align="center">
-    <img src="img/fase2.png" width = "1000" />
-    </p>
-    <p align="center"><strong>Liberação da rede e retomada das operações
-</strong></p>
+    <p align="center">
+        <img src="img/fase2.png" width = "1000" />
+        </p>
+        <p align="center"><strong>Liberação da rede e retomada das operações
+    </strong></p>
 
 >É importante ressaltar que, em um ambiente descentralizado, não é possível garantir com certeza absoluta a falha imediata de um nó, devido à natureza assíncrona da comunicação e à possibilidade de falsos positivos, como atrasos na rede que podem ser confundidos com falhas. No entanto, através de estratégias cuidadosamente planejadas, é viável mitigar os efeitos dessas incertezas e fortalecer a robustez do sistema como um todo.
 
