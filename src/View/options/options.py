@@ -240,5 +240,3 @@ def operations(bank: int, dict_da) -> None:
         prints.get_report_error(dict_resp["descript"])
     else:
         prints.get_report_error("Erro ao tentar realizar as operações.")
-
-    prints.get_clear_prompt()
