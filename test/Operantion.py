@@ -32,9 +32,8 @@ async def fazer_requisicao(url, data):
 
 async def main(urls):
     tasks = [fazer_requisicao(url[0], url[1]) for url in urls]
-    resultados = await asyncio.gather(*tasks)
-    # for resultado in resultados:
-    #     print(resultado)
+    await asyncio.gather(*tasks)
+
 
 # ======================================================================================================================
 
@@ -77,9 +76,10 @@ urls = [
     (f"http://{IP1}:{list_ports[0]}/operations",
      {
          0: {user1_cont1: {"package": [
-                 {"type": "TRANSFER", "value": 500.0, "sender": user1_cont1, "pix": user2_pix1},
-                 {"type": "TRANSFER", "value": 100.0, "sender": user1_cont1, "pix": user1_pix2},
-                 {"type": "TRANSFER", "value": 450.0, "sender": user1_cont1, "pix": user3_pix1}]}},
+             {"type": "TRANSFER", "value": 500.0, "sender": user1_cont1, "pix": user2_pix1},
+             {"type": "TRANSFER", "value": 100.0, "sender": user1_cont1, "pix": user1_pix2},
+             {"type": "TRANSFER", "value": 450.0, "sender": user1_cont1, "pix": user3_pix1}]}
+ },
      }),
     (f"http://{IP1}:{list_ports[2]}/operations",
      {
