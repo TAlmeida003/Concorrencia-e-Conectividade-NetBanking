@@ -34,8 +34,8 @@ async def main(urls):
 
 API1 = "http://172.16.103.1:3050"
 API2 = "http://172.16.103.2:3050"
-API3 = "http://172.16.103.3:3050"
-API4 = "http://172.16.103.4:3050"
+API3 = "http://172.16.103.4:3050"
+API4 = "http://172.16.103.5:3050"
 
 # ======================================================================================================================
 # Login do usuário 1, 2 e 3
@@ -70,31 +70,35 @@ for cont_bank in user3['data']['accounts']:
 operation_thiago = [
     {0: {contas_thiago[0]: {"package": [{"type": "DEPOSIT", "value": 2000.0, "sender": contas_thiago[0]}]}},
      1: {contas_thiago[1]: {"package": [{"type": "DEPOSIT", "value": 1000.0, "sender": contas_thiago[1]}]}},
-     2: {contas_thiago[2]: {"package": [{"type": "DEPOSIT", "value": 500.0, "sender": contas_thiago[2]}]}},
+     3: {contas_thiago[2]: {"package": [{"type": "DEPOSIT", "value": 500.0, "sender": contas_thiago[2]}]}},
      },
     {0: {contas_thiago[0]: {"package": [{"type": "WITHDRAW", "value": 50.0, "sender": contas_thiago[0]}]}},
      1: {contas_thiago[1]: {"package": [{"type": "WITHDRAW", "value": 100.0, "sender": contas_thiago[1]}]}},
-     2: {contas_thiago[2]: {"package": [{"type": "WITHDRAW", "value": 150.0, "sender": contas_thiago[2]}]}},
+     3: {contas_thiago[2]: {"package": [{"type": "WITHDRAW", "value": 150.0, "sender": contas_thiago[2]}]}},
      },
     {0: {contas_thiago[0]: {"package": [{"type": "TRANSFER", "value": 500.0, "sender": contas_thiago[0],
                                          "pix": pix_samara[0]}]}},
      1: {contas_thiago[1]: {"package": [{"type": "TRANSFER", "value": 100.0, "sender": contas_thiago[1],
                                          "pix": pix_thiago[0]}]}},
-     2: {contas_thiago[2]: {"package": [{"type": "TRANSFER", "value": 150.0, "sender": contas_thiago[2],
+     3: {contas_thiago[2]: {"package": [{"type": "TRANSFER", "value": 150.0, "sender": contas_thiago[2],
                                          "pix": pix_samara[2]}]}},
-     3: {contas_thiago[3]: {"package": [{"type": "TRANSFER", "value": 50.0, "sender": contas_thiago[3],
+     4: {contas_thiago[3]: {"package": [{"type": "TRANSFER", "value": 50.0, "sender": contas_thiago[3],
                                          "pix": pix_samara[1]}]}}
      }
 ]
 
 operation_samara = [
-    {0: {contas_samara[0]: {"package": [{"type": "DEPOSIT", "value": 864.0, "sender": contas_samara[0]}]}},
-     1: {contas_samara[1]: {"package": [{"type": "DEPOSIT", "value": 700.0, "sender": contas_samara[1]}]}}
-     },
-    {0: {contas_samara[0]: {"package": [{"type": "TRANSFER", "value": 500.0, "sender": contas_samara[0],
-                                         "pix": pix_silvio[1]}]}},
-     1: {contas_samara[1]: {"package": [{"type": "TRANSFER", "value": 200.0, "sender": contas_samara[1],
-                                         "pix": pix_thiago[0]}]}}
+    {
+        0: {contas_samara[0]: {"package": [{"type": "DEPOSIT", "value": 864.0, "sender": contas_samara[0]}]}},
+        1: {contas_samara[1]: {"package": [{"type": "DEPOSIT", "value": 700.0, "sender": contas_samara[1]}]}}
+    },
+    {
+        0: {contas_samara[0]: {"package": [{"type": "TRANSFER", "value": 500.0, "sender": contas_samara[0],
+                                            "pix": pix_silvio[1]},
+                                           {"type": "TRANSFER", "value": 300.0, "sender": contas_samara[0],
+                                            "pix": pix_thiago[1]}]}},
+        1: {contas_samara[1]: {"package": [{"type": "TRANSFER", "value": 200.0, "sender": contas_samara[1],
+                                            "pix": pix_thiago[0]}]}}
     }
 ]
 
@@ -104,12 +108,17 @@ operation_silvio = [
 ]
 
 urls = [
-    (f"{API2}/operations", operation_thiago[0]),
-    (f"{API1}/operations", operation_thiago[1]),
-    (f"{API3}/operations", operation_thiago[2]),
+    #(f"{API2}/operations", operation_thiago[0]),
+     (f"{API1}/operations", operation_thiago[1]),
+    # (f"{API3}/operations", operation_thiago[2]),
+    # (f"{API1}/operations", operation_samara[0]),
+    # (f"{API1}/operations", operation_samara[1]),
+    # (f"{API3}/operations", operation_silvio[0]),
 ]
 
+print("\n")
 asyncio.run(main(urls))
+print("\n")
 
 # Login do usuário 1, 2 e 3
 user1 = get_request("login", API2,

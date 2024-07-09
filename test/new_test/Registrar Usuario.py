@@ -19,8 +19,8 @@ async def main(urls):
 
 API1 = "http://172.16.103.1:3050"
 API2 = "http://172.16.103.2:3050"
-API3 = "http://172.16.103.3:3050"
-API4 = "http://172.16.103.4:3050"
+API3 = "http://172.16.103.4:3050"
+API4 = "http://172.16.103.5:3050"
 
 user = [
     {"name": "Thiago Neri", "num_cadastro": "123.123.123-01", "user_name": "thiago001", "password": "12345678",

@@ -17,8 +17,8 @@ def get_request(route, base_url, data):
 
 API1 = "http://172.16.103.1:3050"
 API2 = "http://172.16.103.2:3050"
-API3 = "http://172.16.103.3:3050"
-API4 = "http://172.16.103.4:3050"
+API3 = "http://172.16.103.4:3050"
+API4 = "http://172.16.103.5:3050"
 
 contas_thiago = [
     {'user_name': 'thiago001', 'password': '12345678', 'type_account': 'PF', 'pix_type': 'CPF', 'users': [],
