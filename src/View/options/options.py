@@ -232,7 +232,7 @@ def operations(bank: int, dict_da) -> None:
     prints.get_clear_prompt()
     screen.pacote_final(package)
     input()
-
+    prints.get_clear_prompt()
     dict_resp, status = request.post_operations(package, bank)
     if status == 200:
         prints.get_report_action(dict_resp["descript"])
