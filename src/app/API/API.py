@@ -193,7 +193,7 @@ def get_pix_all() -> tuple[Response, int]:
 def get_account(account: str):
     try:
         return jsonify(node.bank.dict_account[int(account)].__dict__), 200
-    except KeyError:
+    except (KeyError, ValueError):
         return jsonify({'descript': 'Conta não encontrada'}), 400
 
 
