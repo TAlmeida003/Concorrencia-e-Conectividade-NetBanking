@@ -84,7 +84,7 @@ Nesta seção, são apresentados os softwares utilizados durante o desenvolvimen
 
 A linguagem ***Python*** foi escolhida devido à sua facilidade de aprendizado e flexibilidade. 
 Sua sintaxe limpa e legível permite a rápida prototipagem de ideias e o desenvolvimento ágil de aplicações. 
-Além disso, *Python* é reconhecido pela sua vasta gama de bibliotecas e frameworks que facilitam o desenvolvimento 
+Além disso, *Python* é reconhecido pela sua vasta gama de bibliotecas e *frameworks* que facilitam o desenvolvimento 
 em diversas áreas. É importante ressaltar que a versão utilizada foi a 3.12.2.
 
 <h3> Biblioteca Flask</h3>
@@ -114,7 +114,7 @@ garantindo que os ambientes de desenvolvimento e produção sejam consistentes e
 
 A IDE ***PyCharm*** é um ambiente de desenvolvimento integrado projetado especificamente para *Python*. O *PyCharm* oferece uma 
 ampla gama de recursos para aumentar a produtividade dos desenvolvedores, incluindo realce de sintaxe avançado, 
-completamento automático de código, depuração integrada e suporte para controle de versão. Além disso, o PyCharm possui
+completamento automático de código, depuração integrada e suporte para controle de versão. Além disso, o *PyCharm* possui
 integração com o *Docker*, facilitando o desenvolvimento e a implantação de aplicativo *Python* em diversos ambientes.
 
 <h3> Insomnia </h3>
@@ -779,7 +779,7 @@ Outra informação importante em relação à rede é que a porta **2050** é ut
 Para garantir a atomicidade das operações bancárias e a inexistência de usuários com os mesmos dados no sistema, utilizando como base a ordenação total, o sistema realiza uma verificação na confirmação para determinar se é o primeiro da fila. 
 
 Antes de enviar as confirmações que é o primeiro do *buffer*, é analisado se todos os dados podem ser processados sem problemas dentro daquele banco. Se isso for possível, a validação é enviada para todos os nós juntamente com a confirmação de que pode ser executada naquele nó. Caso algum nó indique que a operação não é possível, ela é marcada como não executável, iso garante que todos os pacotes funcioraram de maneira atômica. O
-formato da mensagem de confirmação que é a mesma no topo do buffer tem o seguinte formato:
+formato da mensagem de confirmação que é a mesma no topo do *buffer* tem o seguinte formato:
 
 ```json
 {
@@ -831,7 +831,7 @@ Em um ambiente onde múltiplas transações ocorrem concorrentemente no mesmo ba
 
 A concorrência é crucial em sistemas que lidam com operações bancárias, permitindo que várias transações ocorram simultaneamente. Em sistemas distribuídos de bancos financeiros, essa concorrência pode ser interna, envolvendo partes do mesmo sistema acessando recursos compartilhados localmente, ou externa, onde múltiplos bancos coordenam o acesso a dados compartilhados.
 
-Para gerenciar eficientemente cada requisição, **threads** são utilizadas para executar operações locais dentro de cada banco. O uso de **locks** é crucial para assegurar que apenas uma thread por vez tenha acesso a recursos críticos, como bases de dados ou operações sensíveis, prevenindo assim conflitos de dados.
+Para gerenciar eficientemente cada requisição, ***threads*** são utilizadas para executar operações locais dentro de cada banco. O uso de ***locks*** é crucial para assegurar que apenas uma *thread* por vez tenha acesso a recursos críticos, como bases de dados ou operações sensíveis, prevenindo assim conflitos de dados.
 A imagem ilustre a concorrência interna em um banco:
 
 <p align="center">
@@ -847,7 +847,7 @@ Quando vários bancos externos desejam acessar o mesmo recurso, é crucial mante
 
 ### Confiabilidade no Sistema Distribuído
 
-Garantir uma conexão confiável é essencial para o funcionamento eficaz do sistema distribuído. No projeto em questão, essa confiabilidade é obtida por meio de um robusto mecanismo de **heartbeat**, no qual cada nó monitora continuamente o status de conexão dos outros nós. Cada banco é configurado com um servidor **socket**, e múltiplas *threads* são utilizadas para estabelecer e verificar essas conexões entre os bancos.
+Garantir uma conexão confiável é essencial para o funcionamento eficaz do sistema distribuído. No projeto em questão, essa confiabilidade é obtida por meio de um robusto mecanismo de ***heartbeat***, no qual cada nó monitora continuamente o status de conexão dos outros nós. Cada banco é configurado com um servidor ***socket***, e múltiplas *threads* são utilizadas para estabelecer e verificar essas conexões entre os bancos.
 
 Quando um nó não responde dentro de um intervalo de 5 segundos, é considerado que o banco falhou, e essa informação é imediatamente disseminada por toda a rede. Da mesma forma, ao detectar o retorno de um banco, o sistema aguarda um período de 5 segundos para garantir a estabilidade da conexão antes de confirmar seu retorno.
 
