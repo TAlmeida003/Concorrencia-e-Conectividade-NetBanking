@@ -948,8 +948,7 @@ Navegue para o diretório clonado:
 
 Execute o seguinte comando para instalar as dependências do projeto:
 
-    pip install Flask
-    pip install requests
+    pip install -r requirements.txt
     
 **Passo 4: Executar os Projetos**
 
