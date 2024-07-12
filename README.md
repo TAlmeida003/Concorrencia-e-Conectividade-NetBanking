@@ -898,9 +898,8 @@ Os testes estão organizados no diretório `tests`, divididos em arquivos separa
 
 - **Operações Bancárias:** Verifica se o sistema executa operações como depósito, saque e transferência de forma concorrente e sequencial, assegurando a consistência dos saldos das contas e a atomicidade das transações.
 
-> Estes testes foram conduzidos em um ambiente local, simulando a comunicação entre bancos e clientes, além do tratamento de concorrência, para garantir a robustez e confiabilidade do sistema distribuído de bancos financeiros.
-
-> Para executar os testes, basta acessar o diretório `tests` e executar os arquivos *Python* correspondentes a cada teste, escrevendo o comando `python3 test_file.py` no terminal. Os resultados são exibidos no terminal, indicando se as operações foram bem-sucedidas ou se houve falhas.
+Estes testes foram conduzidos em um ambiente local, simulando a comunicação entre bancos e clientes, além do tratamento de concorrência, para garantir a robustez e confiabilidade do sistema distribuído de bancos financeiros.
+Para executar os testes, basta acessar o diretório `tests` e executar os arquivos *Python* correspondentes a cada teste, escrevendo o comando `python3 <test_file>.py` no terminal. Os resultados são exibidos no terminal, indicando se as operações foram bem-sucedidas ou se houve falhas.
 </div>
 </div>
 
