@@ -852,7 +852,7 @@ Garantir uma conexão confiável é essencial para o funcionamento eficaz do sis
 Quando um nó não responde dentro de um intervalo de 5 segundos, é considerado que o banco falhou, e essa informação é imediatamente disseminada por toda a rede. Da mesma forma, ao detectar o retorno de um banco, o sistema aguarda um período de 5 segundos para garantir a estabilidade da conexão antes de confirmar seu retorno.
 
 <p align="center">
-        <img src="img/headbeat.png" width = "350" />
+        <img src="img/headbeat.png" width = "500" />
         </p>
         <p align="center"><strong>Mecanismo de heartbeat para monitoramento de conexões
     </strong></p>
