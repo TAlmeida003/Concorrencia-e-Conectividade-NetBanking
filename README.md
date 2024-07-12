@@ -232,7 +232,7 @@ com base no relógio vetorial para os 3 processos e 4 eventos
 Em caso de eventos concorrentes, onde dois eventos ocorrem simultaneamente em diferentes processos, o relógio vetorial garante que a ordem dos eventos seja consistente em todos os processos. No entanto, apenas com o relógio vetorial, não é possível determinar qual evento ocorreu primeiro. Quando ocorre um conflito, onde dois relógios são simultaneamente maiores e menores, o **ID** do processo é utilizado para decidir a ordem dos eventos. As imagens a seguir ilustram esse cenário.
 
 <p align="center">
-  <img src="img/relogioConcorrente.png" width = "800" />
+  <img src="img/relogioConcorrente.png" width = "600" />
 </p>
 <p align="center"><strong>Cenário de eventos concorrentes
 </strong></p>
@@ -850,6 +850,12 @@ Quando vários bancos externos desejam acessar o mesmo recurso, é crucial mante
 Garantir uma conexão confiável é essencial para o funcionamento eficaz do sistema distribuído. No projeto em questão, essa confiabilidade é obtida por meio de um robusto mecanismo de ***heartbeat***, no qual cada nó monitora continuamente o status de conexão dos outros nós. Cada banco é configurado com um servidor ***socket***, e múltiplas *threads* são utilizadas para estabelecer e verificar essas conexões entre os bancos.
 
 Quando um nó não responde dentro de um intervalo de 5 segundos, é considerado que o banco falhou, e essa informação é imediatamente disseminada por toda a rede. Da mesma forma, ao detectar o retorno de um banco, o sistema aguarda um período de 5 segundos para garantir a estabilidade da conexão antes de confirmar seu retorno.
+
+<p align="center">
+        <img src="img/headbeat.png" width = "350" />
+        </p>
+        <p align="center"><strong>Mecanismo de heartbeat para monitoramento de conexões
+    </strong></p>
 
 Devido à complexidade inerente à implementação de um sistema descentralizado, medidas adicionais são adotadas para lidar com eventos de falha ou retorno no meio de uma operação. Em tais casos, todos os elementos do *buffer* são marcados como não executáveis, e a aplicação é prontamente notificada sobre possíveis problemas na rede. Essa abordagem garante a integridade dos dados e a continuidade das operações mesmo diante de eventos imprevistos.
 
