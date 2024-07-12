@@ -31,7 +31,15 @@ O sistema será implementado por meio de um consórcio bancário, permitindo a c
 <h2> Autor <br></h2>
 <uL>
   <li><a href="https://github.com/TAlmeida003">Thiago Neri dos Santos Almeida</a></li>
+  <li>Engenharia de Computação — UEFS</li>
+</ul>
 
+![-----------------------------------------------------](img/len.png)
+
+<h2> Tutor <br></h2>
+<ul>
+      <li>Dr. José Amancio Macedo Santos</li>
+      <li>Departamento de Tecnologia (DTEC) — UEFS</li>
 </ul>
 
 ![-----------------------------------------------------](img/len.png)
