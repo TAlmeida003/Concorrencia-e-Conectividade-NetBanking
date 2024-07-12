@@ -19,7 +19,7 @@ O sistema será implementado por meio de um consórcio bancário, permitindo a c
 
 - **Cliente Bancário:** Oferece uma interface para pessoas físicas e jurídicas gerenciarem contas e transações de forma integrada. Isso inclui criar contas, realizar transações entre diferentes bancos ou internamente no mesmo banco, e lidar com transações sequenciais e concorrentes;
 
-- **Servidor Bancário:** Centraliza e controla transações para garantir que o dinheiro não seja duplicado. Isso inclui verificar conexões, gerenciar erros e executar o sistema em containers Docker;
+- **Servidor Bancário:** Centraliza e controla transações para garantir que o dinheiro não seja duplicado. Isso inclui verificar conexões, gerenciar erros e executar o sistema em containers *Docker*;
 
 -  **Comunicação Interbancária:**  implementa uma API para troca segura e eficiente de dados entre os bancos, mantendo a integridade e confidencialidade das informações.
 
@@ -107,7 +107,7 @@ As bibliotecas ***Asyncio*** e ***Aiohttp*** foram utilizadas para implementar f
 O ***Docker*** é uma plataforma de implantação e execução de aplicativos em contêineres. 
 Um contêiner é uma unidade leve e portátil que inclui tudo o que um aplicativo precisa 
 para ser executado de forma independente, como código, bibliotecas, dependências e configurações.
-O Docker oferece uma plataforma consistente para desenvolver, testar e implantar aplicativos, 
+O *Docker* oferece uma plataforma consistente para desenvolver, testar e implantar aplicativos, 
 garantindo que os ambientes de desenvolvimento e produção sejam consistentes e reproduzíveis.
 
 <h3>IDE PyCharm</h3>
@@ -213,7 +213,7 @@ Em sistemas distribuídos, a ordenação total de mensagens é fundamental para 
 
 Antes de discutir o algoritmo de controle de concorrência, é crucial entender o **relógio vetorial**. Este mecanismo de *timestamp* é usado para capturar a ordem causal de eventos entre diferentes processos em um sistema distribuído. Cada processo mantém um vetor de contadores, onde cada entrada representa o número de eventos observados por aquele processo.
 
-Ao enviar uma mensagem, um processo inclui uma cópia de seu vetor de relógios. Ao receber uma mensagem, um processo atualiza seu vetor combinando-o com o vetor recebido, garantindo uma visão consistente da ordem de eventos entre todos os processos. Essas mensagens são colocadas no buffer com base em seu valor de relógio, utilizando a estrutura de dados **heap** para facilitar o processo. As próximas imagens ilustram o funcionamento do relógio vetorial e seu uso na ordenação de mensagens.
+Ao enviar uma mensagem, um processo inclui uma cópia de seu vetor de relógios. Ao receber uma mensagem, um processo atualiza seu vetor combinando-o com o vetor recebido, garantindo uma visão consistente da ordem de eventos entre todos os processos. Essas mensagens são colocadas no buffer com base em seu valor de relógio, utilizando a estrutura de dados ***heap*** para facilitar o processo. As próximas imagens ilustram o funcionamento do relógio vetorial e seu uso na ordenação de mensagens.
 
 <p align="center">
   <img src="img/RelogioVetorial.png" width = "800" />
@@ -851,7 +851,7 @@ Garantir uma conexão confiável é essencial para o funcionamento eficaz do sis
 
 Quando um nó não responde dentro de um intervalo de 5 segundos, é considerado que o banco falhou, e essa informação é imediatamente disseminada por toda a rede. Da mesma forma, ao detectar o retorno de um banco, o sistema aguarda um período de 5 segundos para garantir a estabilidade da conexão antes de confirmar seu retorno.
 
-Devido à complexidade inerente à implementação de um sistema descentralizado, medidas adicionais são adotadas para lidar com eventos de falha ou retorno. Em tais casos, todos os elementos do *buffer* são marcados como não executáveis, e a aplicação é prontamente notificada sobre possíveis problemas na rede. Essa abordagem garante a integridade dos dados e a continuidade das operações mesmo diante de eventos imprevistos.
+Devido à complexidade inerente à implementação de um sistema descentralizado, medidas adicionais são adotadas para lidar com eventos de falha ou retorno no meio de uma operação. Em tais casos, todos os elementos do *buffer* são marcados como não executáveis, e a aplicação é prontamente notificada sobre possíveis problemas na rede. Essa abordagem garante a integridade dos dados e a continuidade das operações mesmo diante de eventos imprevistos.
 
 Para garantir a coordenação e a integridade da rede em situações de falha ou retorno, o processo é realizado em dois passos:
 
