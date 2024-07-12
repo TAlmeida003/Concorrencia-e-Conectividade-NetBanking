@@ -906,7 +906,7 @@ Os testes estão organizados no diretório `tests`, divididos em arquivos separa
 
 Com base nas discussões anteriores e nos componentes abordados, podemos concluir que o projeto de sistema distribuído de bancos financeiros representa uma solução inovadora para integrar clientes de diferentes instituições bancárias em um ambiente distribuído. A implementação de um consórcio bancário, junto com uma arquitetura baseada em API REST e comunicação interbancária segura, proporciona uma base sólida para transações financeiras rápidas e seguras.
 
-Os requisitos do projeto, incluindo a gestão de contas e transações concorrentes, destacam a necessidade de uma abordagem robusta e escalável para lidar com os desafios da interconexão bancária. A ênfase na confiabilidade, integridade dos dados e tolerância a falhas, demonstrada através de algoritmos de ordenação total de multicast e containers *Docker*, sublinha o compromisso em oferecer um sistema bancário distribuído eficiente.
+Os requisitos do projeto, incluindo a gestão de contas e transações concorrentes, destacam a necessidade de uma abordagem robusta e escalável para lidar com os desafios da interconexão bancária. A ênfase na confiabilidade, integridade dos dados e tolerância a falhas, demonstrada através de algoritmos de ordenação total de *multicast* e containers *Docker*, sublinha o compromisso em oferecer um sistema bancário distribuído eficiente.
 
 Em resumo, este projeto não apenas respondeu às demandas por um sistema financeiro distribuído, mas também proporcionou um avanço significativo no desenvolvimento de soluções adaptadas para um ambiente sem banco central, promovendo maior inclusão e eficiência no setor financeiro.
 
