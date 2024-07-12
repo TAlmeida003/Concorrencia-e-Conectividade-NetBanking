@@ -5,7 +5,7 @@
 <h1 align="center">NetBanking
 </h1>
 
-<h3 align="center">Projeto de Sistema Distribuído de Bancos Financeiros utilizando API REST</h3>
+<h3 align="center">Projeto de Sistema Distribuído de Bancos Financeiros Utilizando Algoritmo de Ordenação Total de Multicast e API REST</h3>
 
 ![-----------------------------------------------------](img/len.png)
 
