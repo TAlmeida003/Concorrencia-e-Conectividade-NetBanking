@@ -978,14 +978,14 @@ Após construir as imagens *Docker*, execute o seguinte comando para iniciar os 
 
 > **Nota Importante:** Substitua `IP_DA_MAQUINA` pelo IP da máquina que está sendo utilizada.
 
-Docker Pull:
+<h4> Docker Pull </h4>
 
-Para obter a imagem Docker pré-construída, execute o seguinte comando:
+Para obter a imagem *Docker* pré-construída, execute o seguinte comando:
 
     docker pull thiago003/banco_app:banco_app
     docker pull thiago003/banco_view:banco_view
 
-Após obter as imagens, execute o seguinte comando para iniciar os containers Docker:
+Após obter as imagens, execute o seguinte comando para iniciar os containers *Docker*:
     
     docker run --network  host -iti -e IP=IP_DA_MAQUINA thiago003/banco_app:banco_app
     docker run --network  host -iti thiago003/banco_view:banco_view
